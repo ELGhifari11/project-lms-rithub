@@ -36,14 +36,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/v1/mentors/{mentorId}', [MentorController::class, 'getMentorById']);
 
     Route::post('/v1/bookmarks', [BookmarkController::class, 'addBookmark']);
-    Route::get('/v1/bookmarks', [BookmarkController::class, 'getBookmarked']);
+    Route::get('/v1/bookmarks', [BookmarkController::class, 'getBookmarkeds']);
     Route::delete('/v1/bookmarks', [BookmarkController::class, 'delete']);
     Route::delete('/v1/bookmarks/bulk-delete', [BookmarkController::class, 'bulkDelete']);
     Route::delete('/v1/bookmarks/clear-all', [BookmarkController::class, 'clearAll']);
 
-    Route::post('/v1/checkout', [CheckoutController::class, 'makeOrder'])->name('checkout.make-order');
-    Route::get('/v1/checkout/history', [CheckoutController::class, 'orderHistory'])->name('checkout.history');
-    Route::get('/v1/checkout/{order_id}', [CheckoutController::class, 'getOrder'])->name('checkout.detail');
+    Route::post('/v1/checkout', [CheckoutController::class, 'makeOrder'])
+        ->name('checkout.make-order');
+    Route::get('/v1/checkout/history', [CheckoutController::class, 'orderHistory'])
+        ->name('checkout.history');
+    Route::get('/v1/checkout/{order_id}', [CheckoutController::class, 'getOrder'])
+        ->name('checkout.detail');
 });
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/webhook.php';

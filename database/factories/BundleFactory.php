@@ -24,7 +24,7 @@ class BundleFactory extends Factory
             'name' => 'Bundle ' . ucfirst($this->faker->unique()->words(2, true)),
             'description' => $this->faker->paragraph,
             'type' => $this->faker->randomElement(['single_class', 'category', 'sub_category', 'full_access', 'custom']),
-            'total_price' => $this->faker->randomFloat(2, 200, 1000),
+            'total_price' => $this->faker->numberBetween(10000, 500000),
             'validity_days' => $this->faker->randomElement([7, 14, 30, 90, 180, 365]),
             'is_active' => $this->faker->boolean(90), // 90% chance of being true
             'created_at' => now(),

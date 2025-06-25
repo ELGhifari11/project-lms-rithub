@@ -35,7 +35,7 @@ class WithdrawalFactory extends Factory
         $wallet = Wallet::firstOrCreate(
             ['mentor_id' => $mentorId],
             [
-                'balance' => fake()->randomFloat(2, 1000, 1000000),
+                'balance' => fake()->numberBetween(50000, 1000000),
                 'bank_name' => fake()->company(),
                 'account_holder_name' => fake()->name(),
                 'bank_account_number' => fake()->creditCardNumber(),

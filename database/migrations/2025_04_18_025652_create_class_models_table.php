@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->integer('duration_minutes');
-            $table->biginteger('price')->default(0)->unsigned();
-            $table->bigInteger('lifetime_price')->default(0)->unsigned();
+            $table->decimal('price', 9, 2)->default(0)->unsigned();
+            $table->decimal('lifetime_price', 9, 2)->default(0)->unsigned();
             $table->boolean('status');
             $table->timestamps();
 

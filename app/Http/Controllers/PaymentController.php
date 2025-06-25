@@ -21,7 +21,7 @@ class PaymentController extends Controller
 
             $items = $order->items->map(function ($item) {
                 return [
-                    'name' => $item->item->title ?? 'Untitled',
+                    'name' => $item->item->title ?? "Mentor " . $item->name,
                     'price' => $item->item->price,
                     'interval' => $item->interval,
                     'category' => $item->item->subCategory->category->name ?? 'Unknown',

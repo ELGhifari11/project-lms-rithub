@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('profession')->nullable();
             $table->unsignedInteger('preference')->nullable();
             $table->json('social_media')->nullable();
-            $table->biginteger('price')->nullable()->unsigned();
-            $table->bigInteger('lifetime_price')->nullable()->unsigned();
+            $table->decimal('price', 9, 2)->nullable()->unsigned();
+            $table->decimal('lifetime_price', 9, 2)->nullable()->unsigned();
         });
     }
 

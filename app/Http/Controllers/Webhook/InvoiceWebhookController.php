@@ -54,6 +54,7 @@ class InvoiceWebhookController extends Controller
             return response()->json([
                 'error' => 'An error occurred while processing the order',
                 'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }
@@ -63,10 +64,13 @@ class InvoiceWebhookController extends Controller
         try {
             $order->load('items.item');
 
-            $itemObject = $order->items->item;
+            $itemObject = $order->items->first();
 
             if (!$itemObject) {
-                Log::warning('Item not found', ['item_id' => $order->item->id, 'item_type' => $order->item->item_type]);
+                Log::warning('Item not found', [
+                    'item_id' => $order->items->first()->id,
+                    'item_type' => $order->items->first()->item_type
+                ]);
                 return false;
             }
 
@@ -74,12 +78,15 @@ class InvoiceWebhookController extends Controller
 
             if ($order->items->first()->item_type === User::class) {
                 $mentor = $itemObject;
-            } elseif (method_exists($itemObject, 'mentor')) {
-                $mentor = $itemObject->mentor;
+            } elseif (isset($itemObject->item->mentor_id)) {
+                $mentor = User::find($itemObject->item->mentor_id);
             }
 
             if (!$mentor) {
-                Log::warning('Mentor not found for item', ['item_id' => $order->item->id, 'item_type' => $order->item->item_type]);
+                Log::warning('Mentor not found for item', [
+                    'item_id' => $order->items->first()->id,
+                    'item_type' => $order->items->first()->item_type
+                ]);
                 return false;
             }
 
@@ -95,7 +102,7 @@ class InvoiceWebhookController extends Controller
                 Log::info('info: ', ['price' => $price, 'item' => $itemObject]);
             }
 
-            $commission = $price - $order->admin_fee;
+            $commission = $price - $order->total_admin_fee;
 
             $commissionEarning = CommissionEarning::create([
                 'mentor_id' => $mentor->id,
@@ -122,7 +129,7 @@ class InvoiceWebhookController extends Controller
             return true;
         } catch (\Exception $e) {
             Log::error('Error processing single item commission:', [
-                'item_id' => $order->item->id,
+                'item_id' => $order->items->first()->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -137,7 +144,9 @@ class InvoiceWebhookController extends Controller
             $order->load(['items.item']);
 
             if (!$order->items || $order->items->isEmpty()) {
-                Log::warning('Cannot add subscription: Order has no items', ['order_id' => $order->id]);
+                Log::warning('Cannot add subscription: Order has no items', [
+                    'order_id' => $order->id
+                ]);
                 return false;
             }
 
@@ -166,7 +175,11 @@ class InvoiceWebhookController extends Controller
                 'enrollable_id' => $enrollableId,
             ]);
 
-            Log::info('enrollment created: ', ['enrollment' => $enrollment, 'order' => $order, 'order-item' => $item]);
+            Log::info('enrollment created: ', [
+                'enrollment' => $enrollment,
+                'order' => $order,
+                'order-item' => $item
+            ]);
 
             return true;
         } catch (\Exception $e) {

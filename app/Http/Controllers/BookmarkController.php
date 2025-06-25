@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use phpseclib3\Crypt\RC2;
 
 class BookmarkController extends Controller
 {
@@ -30,7 +29,7 @@ class BookmarkController extends Controller
         ]);
     }
 
-    public function getBookmarked(Request $request): JsonResponse
+    public function getBookmarkeds(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'search' => 'nullable|string|max:255'

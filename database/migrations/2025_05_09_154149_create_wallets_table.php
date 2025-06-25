@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('bank_name');
             $table->string('account_holder_name');
             $table->string('bank_account_number');
-            $table->bigInteger('balance')->default(0);
+            $table->decimal('balance', 10, 2)->default(0);
             $table->timestamps();
         });
     }

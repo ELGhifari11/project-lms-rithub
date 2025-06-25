@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('type');
-            $table->bigInteger('total_price')->default(0)->unsigned();
+            $table->decimal('total_price', 9, 2)->default(0)->unsigned();
             $table->integer('validity_days');
             $table->boolean('is_active')->default(true);
             $table->timestamps();

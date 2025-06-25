@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->integer('max_participants')->nullable();
-            $table->biginteger('price')->default(0)->unsigned();
+            $table->decimal('price', 9, 2)->default(0)->unsigned();
             $table->string('status')->default('upcoming');
             $table->string('thumbnail_path')->nullable();
             $table->boolean('is_done')->default(false);

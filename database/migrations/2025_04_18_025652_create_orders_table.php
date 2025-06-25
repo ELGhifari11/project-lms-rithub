@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('total_amount', 10, 2)->nullable();
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->decimal('final_amount', 10, 2)->nullable();
-            $table->bigInteger('total_admin_fee')->default(0);
+            $table->decimal('total_admin_fee', 10, 2)->default(0);
             $table->string('payment_method', 50)->nullable();
             $table->string('payment_provider', 50)->nullable();
             $table->string('status')->default('pending');

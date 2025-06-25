@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('item_type');
             $table->string('interval');
             $table->boolean('is_percentage')->default(false);
-            $table->bigInteger('fixed_commission')->default(0);
+            $table->decimal('fixed_commission', 7, 2)->default(0);
             $table->integer('platform_share')->default(0);
             $table->timestamps();
         });
