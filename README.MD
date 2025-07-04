@@ -15,9 +15,11 @@ Repository ini berisi kode sumber untuk Proyek Learning Management System (LMS) 
 
 Pastikan perangkat Anda telah terinstal perangkat lunak berikut:
 
--   [Docker](https://www.docker.com/products/docker-desktop/)
+-   [PHP](https://www.php.net/downloads.php) (version 8.2 or newer)
+-   [MySQL](https://dev.mysql.com/downloads/) (or install [Laragon](https://laragon.org/download/))
 -   [Composer](https://getcomposer.org/download/)
 -   [Node.js & NPM](https://nodejs.org/en/download/)
+-   [Git CLI](https://git-scm.com/downloads)
 
 ## Langkah-langkah Instalasi
 
