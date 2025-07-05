@@ -67,6 +67,7 @@ class ManageSetting extends SettingsPage
                                     ->label('Enable Email Verification')
                                     ->hintIconTooltip('Require email verification for new accounts'),
                             ]),
+
                         \Filament\Forms\Components\Grid::make(3)
                             ->schema([
                                 \Filament\Forms\Components\FileUpload::make('logo_url')
@@ -88,6 +89,7 @@ class ManageSetting extends SettingsPage
                                 \Filament\Forms\Components\FileUpload::make('favicon_url')
                                     ->label('Favicon')
                                     ->image()
+                                    ->imageEditor()
                                     ->imageCropAspectRatio('1:1')
                                     ->disk('public')
                                     ->hintIcon('heroicon-o-information-circle')

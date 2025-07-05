@@ -23,9 +23,10 @@ class KaidoSetting extends Settings
     // public ?string $timezone = null;
     // public ?string $locale = null;
 
-    public ?string $logo_url = 'images/light.png';
-    public ?string $logo_dark_url = 'images/dark.png';
-    public ?string $favicon_url = 'images/rithub-favicon.png';
+    public ?string $logo_url = null;
+    public ?string $logo_dark_url = null;
+    public ?string $favicon_url = null;
+    
     public bool $email_verification_enabled = false;
     public bool $impersonation_enabled = true;
     public bool $maintenance_mode = false;

@@ -12,6 +12,7 @@ use App\Filament\Pages\Register;
 use Filament\Support\Colors\Color;
 use Hasnayeen\Themes\ThemesPlugin;
 use App\Livewire\CustomProfileInfo;
+use Illuminate\Support\Facades\Auth;
 use App\Filament\Resources\LogResource;
 use Awcodes\LightSwitch\Enums\Alignment;
 use Filament\Forms\Components\FileUpload;
@@ -19,8 +20,8 @@ use Rupadana\ApiService\ApiServicePlugin;
 use Awcodes\LightSwitch\LightSwitchPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use Hasnayeen\Themes\Filament\Pages\Themes;
 
+use Hasnayeen\Themes\Filament\Pages\Themes;
 use Rmsramos\Activitylog\ActivitylogPlugin;
 use Hasnayeen\Themes\Http\Middleware\SetTheme;
 use Illuminate\Session\Middleware\StartSession;
@@ -57,6 +58,28 @@ class AdminPanelProvider extends PanelProvider
         }
     }
 
+    private function getPrimaryColor($default = 'Pink')
+    {
+        try {
+            $colorName = (new Themes())->getColor() ?? $default;
+
+            if (str_starts_with($colorName, '#')) {
+                return $default;
+            }
+
+            $colorName = ucfirst(strtolower($colorName));
+
+            $colorClass = \Filament\Support\Colors\Color::class;
+
+            return defined("$colorClass::$colorName")
+                ? constant("$colorClass::$colorName")
+                : constant("$colorClass::$default");
+
+        } catch (\Exception $e) {
+            return constant("\Filament\Support\Colors\Color::$default");
+        }
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -73,9 +96,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->defaultThemeMode(ThemeMode::System)
-            ->favicon(asset($this->settings->favicon_url ?? 'images/rithub-favicon.png'))
-            ->brandLogo(asset($this->settings->logo_url ?? 'images/light.png'))
-            ->darkModeBrandLogo(asset($this->settings->logo_dark_url ?? 'images/dark.png'))
+            ->favicon(fn () => $this->settings?->favicon_url ? asset($this->settings->favicon_url) : asset('images/rithub-favicon.png'))
+            ->brandLogo(fn () => $this->settings?->logo_url ? asset($this->settings->logo_url) : asset('images/rithub-logo.png'))
+            ->darkModeBrandLogo(fn () => $this->settings?->logo_dark_url ? asset($this->settings->logo_dark_url) : asset('images/rithub-logo-dark.png'))
             ->brandName($this->settings->site_name ?? 'Site Name')
             ->brandLogoHeight('4rem')
             ->sidebarCollapsibleOnDesktop(true)
@@ -122,7 +145,7 @@ class AdminPanelProvider extends PanelProvider
     {
         $plugins = [
             FilamentProgressbarPlugin::make()
-                ->color((new Themes())->getColor() ?? '#ec4899'),
+                ->color((new Themes())->getColor() ?? 'pink'),
             FilamentApexChartsPlugin::make(),
             LightSwitchPlugin::make()
                 ->position(Alignment::TopCenter),
@@ -130,24 +153,25 @@ class AdminPanelProvider extends PanelProvider
                 ->resource(LogResource::class)
                 ->navigationGroup('Settings')
                 ->navigationIcon('heroicon-m-document-magnifying-glass'),
-            ThemesPlugin::make(),
-            FilamentShieldPlugin::make()
-                // ->gridColumns([
-                //     'default' => 1,
-                //     'sm' => 2,
-                //     'lg' => 3
-                // ])
-                // ->sectionColumnSpan(1)
-                // ->checkboxListColumns([
-                //     'default' => 1,
-                //     'sm' => 2,
-                //     'lg' => 4,
-                // ])
-                // ->resourceCheckboxListColumns([
-                //     'default' => 1,
-                //     'sm' => 2,
-                // ])
+            ThemesPlugin::make()
                 ,
+            FilamentShieldPlugin::make()
+            // ->gridColumns([
+            //     'default' => 1,
+            //     'sm' => 2,
+            //     'lg' => 3
+            // ])
+            // ->sectionColumnSpan(1)
+            // ->checkboxListColumns([
+            //     'default' => 1,
+            //     'sm' => 2,
+            //     'lg' => 4,
+            // ])
+            // ->resourceCheckboxListColumns([
+            //     'default' => 1,
+            //     'sm' => 2,
+            // ])
+            ,
             BreezyCore::make()
                 ->myProfile(
                     shouldRegisterUserMenu: true,
@@ -192,11 +216,7 @@ class AdminPanelProvider extends PanelProvider
                         ->icon('fab-github')
                         ->color(
                             (function () {
-                                $colorName = (new Themes())->getColor() ?? 'Pink';
-                                $colorName = ucfirst(strtolower($colorName));
-                                $colorClass = "\\Filament\\Support\\Colors\\Color";
-                                $colorValue = constant("$colorClass::{$colorName}") ?? constant("$colorClass::Pink");
-                                return $colorValue;
+                                return self::getPrimaryColor();
                             })()
                         )
                         ->outlined(true)
@@ -206,11 +226,7 @@ class AdminPanelProvider extends PanelProvider
                         ->icon('fab-google')
                         ->color(
                             (function () {
-                                $colorName = (new Themes())->getColor() ?? 'Pink';
-                                $colorName = ucfirst(strtolower($colorName));
-                                $colorClass = "\\Filament\\Support\\Colors\\Color";
-                                $colorValue = constant("$colorClass::{$colorName}") ?? constant("$colorClass::Pink");
-                                return $colorValue;
+                                return self::getPrimaryColor();
                             })()
                         )
                         ->outlined(true)
@@ -226,7 +242,7 @@ class AdminPanelProvider extends PanelProvider
                     $user->email = $oauthUser->getEmail();
                     $user->username = $oauthUser->getNickname() ?? explode('@', $oauthUser->getEmail())[0];
                     $user->avatar_url = $oauthUser->getAvatar();
-                    $user->social_media = match($provider) {
+                    $user->social_media = match ($provider) {
                         'github' => ['github' => $oauthUser->user['html_url'] ?? null],
                         default => []
                     };
