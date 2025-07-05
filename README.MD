@@ -1,142 +1,137 @@
-# Proyek LMS Rithub Batch 1
+# Project LMS Rithub Batch 1
 
-Repository ini berisi kode sumber untuk Proyek Learning Management System (LMS) yang dikembangkan menggunakan TALL Stack (Tailwind CSS, Alpine.js, Laravel, Livewire) dan Filament.
+This document provides instructions on how to set up and run the project locally.
 
-## Teknologi yang Digunakan
+## Prerequisites
 
--   **Backend:** Laravel 11
--   **Admin Panel:** Filament 3
--   **Frontend:** Blade, Tailwind CSS, Alpine.js
--   **Database:** SQLite (default), dapat dikonfigurasi ke MySQL/PostgreSQL
--   **Web Server:** Nginx (via Docker)
--   **Containerization:** Docker
+Before you begin, ensure you have the following installed:
 
-## Prasyarat
+-   A GitHub Account
+-   A Terminal (Powershell, CMD, Laragon Terminal, etc.)
+-   Git
+-   Node.js & NPM
+-   PHP
+-   Composer
 
-Pastikan perangkat Anda telah terinstal perangkat lunak berikut:
+## Repository Link
 
--   [PHP](https://www.php.net/downloads.php) (version 8.2 or newer)
--   [MySQL](https://dev.mysql.com/downloads/) (or install [Laragon](https://laragon.org/download/))
--   [Composer](https://getcomposer.org/download/)
--   [Node.js & NPM](https://nodejs.org/en/download/)
--   [Git CLI](https://git-scm.com/downloads)
+You can find the project's GitHub repository here:
+[https://github.com/ELGhifari11/project-lms-rithub-batch-1](https://github.com/ELGhifari11/project-lms-rithub-batch-1)
 
-## Langkah-langkah Instalasi
+---
 
-Berikut adalah panduan untuk menginstal dan menjalankan proyek ini di lingkungan lokal Anda.
+## Step-by-Step Guide
 
-### 1. Clone Repository
+### A. Initial Setup
 
-Clone repository ini ke mesin lokal Anda menggunakan Git:
+1.  **Open the GitHub Repository**
+    -   Navigate to the repository using the link provided above.
 
-```bash
-git clone https://github.com/username/project-lms-rithub-batch1.git
-cd project-lms-rithub-batch1
-```
-
-### 2. Instalasi Dependensi
-
-Instal dependensi PHP menggunakan Composer dan dependensi JavaScript menggunakan NPM:
-
-```bash
-composer install
-npm install
-```
-
-### 3. Konfigurasi Lingkungan
-
-Salin file `.env.example` menjadi `.env`. File ini akan digunakan untuk menyimpan konfigurasi lingkungan proyek.
-
-```bash
-cp .env.example .env
-```
-
-Setelah itu, buka file `.env` dan sesuaikan konfigurasi database dan variabel lainnya jika diperlukan. Secara default, proyek ini dikonfigurasi untuk menggunakan SQLite.
-
-### 4. Generate Application Key
-
-Buat kunci aplikasi unik untuk proyek Laravel Anda:
-
-```bash
-php artisan key:generate
-```
-
-### 5. Migrasi dan Seeding Database
-
-Jalankan migrasi untuk membuat skema database dan jalankan seeder untuk mengisi data awal (jika ada):
-
-```bash
-php artisan migrate --seed
-```
-
-Perintah ini juga akan membuat file `database/database.sqlite` jika belum ada.
-
-### 6. Build Aset Frontend
-
-Compile aset frontend seperti CSS dan JavaScript menggunakan Vite:
-
-```bash
-npm run build
-```
-
-## Menjalankan Aplikasi
-
-Anda dapat menjalankan aplikasi menggunakan Docker (direkomendasikan) atau server pengembangan lokal Laravel.
-
-### Menggunakan Docker
-
-Cara ini direkomendasikan untuk memastikan konsistensi lingkungan pengembangan.
-
-1.  **Build dan Jalankan Container:**
-    Gunakan Docker Compose untuk membangun image dan menjalankan container di background.
-
+2.  **Clone the Repository**
+    -   Clone the repository using the HTTPS link.
+    -   If you are using Laragon, make sure to clone the project into `C:\laragon\www`.
     ```bash
-    docker-compose up -d --build
+    git clone https://github.com/ELGhifari11/project-lms-rithub-batch-1.git
     ```
 
-2.  **Akses Aplikasi:**
-    Setelah container berjalan, aplikasi dapat diakses melalui browser di alamat:
-    [http://localhost:8000](http://localhost:8000)
-
-### Menggunakan Server Lokal (Artisan)
-
-Jika Anda tidak ingin menggunakan Docker, Anda bisa menjalankan server pengembangan bawaan Laravel.
-
-1.  **Jalankan Server:**
-
+3.  **Navigate to the Project Directory**
+    -   Change your current directory to the newly cloned project folder.
     ```bash
-    php artisan serve
+    cd project-lms-rithub-batch-1
     ```
 
-2.  **Jalankan Vite (untuk Frontend):**
-    Buka terminal baru dan jalankan Vite untuk melayani aset frontend secara real-time.
-
+4.  **Create the `.env` File**
+    -   Copy the example environment file to create your own configuration file.
     ```bash
-    npm run dev
+    copy .env.example .env
     ```
 
-3.  **Akses Aplikasi:**
-    Aplikasi akan tersedia di alamat yang ditampilkan oleh `php artisan serve` (biasanya [http://127.0.0.1:8000](http://127.0.0.1:8000)).
+5.  **Configure the Database**
+    -   In the `.env` file, comment out all database configurations except for `DB_CONNECTION`.
+    -   Change `DB_CONNECTION=mysql` to `DB_CONNECTION=sqlite`.
+    -   Ensure `CACHE_STORE` is set to `file`.
 
-## Perintah yang Berguna
-
--   **Masuk ke dalam container Docker:**
+6.  **Install Composer Dependencies**
+    -   Run the following command in your terminal:
     ```bash
-    docker-compose exec app bash
+    composer install
     ```
 
--   **Menjalankan tes:**
+7.  **Generate Application Key**
+    -   Run the following command:
     ```bash
-    php artisan test
+    php artisan key:generate
     ```
 
--   **Menghentikan container Docker:**
+8.  **Run Migrations and Seed the Database**
+    -   This will set up your database schema and populate it with initial data.
     ```bash
-    docker-compose down
+    php artisan migrate --seed
     ```
 
--   **Membuat user admin Filament:**
+9.  **Generate Shield Resources**
+    -   Generate all necessary Filament Shield policies and resources.
     ```bash
-    php artisan make:filament-user
+    php artisan shield:generate --all
     ```
-    Ikuti instruksi untuk membuat akun admin, lalu akses panel admin di `/admin`.
+
+10. **Assign Super Admin Role**
+    -   Run the command and select user ID `1` when prompted.
+    ```bash
+    php artisan shield:super-admin
+    ```
+
+11. **Build Frontend Assets**
+    -   Compile the frontend assets using NPM.
+    ```bash
+    npm run build
+    ```
+
+12. **Run the Project**
+    -   Ensure Laragon is running.
+    -   Open your browser and navigate to `project-lms-rithub-batch-1.test`.
+
+13. **Update Environment Configuration**
+    -   In your `.env` file, set the `APP_URL` and `APP_DOMAIN` to your local development domain.
+    ```
+    APP_URL=http://project-lms-rithub-batch-1.test
+    APP_DOMAIN=project-lms-rithub-batch-1.test
+    ```
+
+### B. Beekeeper Studio Configuration
+
+1.  **Select Connection Type**
+    -   Choose `SQLite` as the connection type.
+
+2.  **Choose Database File**
+    -   Select the `database.sqlite` file located in the `database` folder of the project.
+
+3.  **Connect**
+    -   Click the "Connect" button to open the database.
+
+### C. Push to Your Personal GitHub Repository
+
+1.  **Remove the Original Remote**
+    -   This disconnects the project from the original repository.
+    ```bash
+    git remote remove origin
+    ```
+
+2.  **Create a New Repository**
+    -   Create a new, empty repository on your personal GitHub account.
+    -   Add your new repository as a remote for your local project. Replace `nama_remote` with a name of your choice (e.g., `origin`) and `git_url` with your new repository's URL.
+    ```bash
+    git remote add <nama_remote> <git_url>
+    ```
+
+3.  **Stage Your Files**
+    -   Add all files to be committed.
+    ```bash
+    git add .
+    ```
+
+4.  **Push to Your Repository**
+    -   Push your code to your new remote repository.
+    ```bash
+    git push -u <nama_remote> main
+    ```
