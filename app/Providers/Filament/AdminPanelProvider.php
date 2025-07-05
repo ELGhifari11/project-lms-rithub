@@ -66,16 +66,16 @@ class AdminPanelProvider extends PanelProvider
             ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(Login::class))
             ->when($this->settings->registration_enabled ?? true, fn($panel) => $panel->registration(Register::class))
             ->when($this->settings->password_reset_enabled ?? true, fn($panel) => $panel->passwordReset())
-            ->when(!($this->settings->email_verification_enabled ?? true), fn($panel) => $panel->emailVerification(false))
+            ->when($this->settings->email_verification_enabled ?? true, fn($panel) => $panel->emailVerification())
             ->colors([
                 'primary' => Color::Pink,
                 'secondary' => Color::Gray,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->defaultThemeMode(ThemeMode::System)
-            ->favicon($this->settings->favicon_url ? asset('storage/' . $this->settings->favicon_url) : asset('images/rithub-favicon.png'))
-            ->brandLogo($this->settings->logo_url ? asset('storage/' . $this->settings->logo_url) : asset('images/light.png'))
-            ->darkModeBrandLogo($this->settings->logo_dark_url ? asset('storage/' . $this->settings->logo_dark_url) : asset('images/dark.png'))
+            ->favicon(asset($this->settings->favicon_url ?? 'images/rithub-favicon.png'))
+            ->brandLogo(asset($this->settings->logo_url ?? 'images/light.png'))
+            ->darkModeBrandLogo(asset($this->settings->logo_dark_url ?? 'images/dark.png'))
             ->brandName($this->settings->site_name ?? 'Site Name')
             ->brandLogoHeight('4rem')
             ->sidebarCollapsibleOnDesktop(true)
