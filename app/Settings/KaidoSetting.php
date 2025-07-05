@@ -23,10 +23,10 @@ class KaidoSetting extends Settings
     // public ?string $timezone = null;
     // public ?string $locale = null;
 
-    // public ?string $logo_url = null;
-    // public ?string $logo_dark_url = null;
-    // public ?string $favicon_url = null;
-
+    public ?string $logo_url = null;
+    public ?string $logo_dark_url = null;
+    public ?string $favicon_url = null;
+    
     public bool $email_verification_enabled = false;
     public bool $impersonation_enabled = true;
     public bool $maintenance_mode = false;
