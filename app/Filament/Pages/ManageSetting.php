@@ -67,33 +67,34 @@ class ManageSetting extends SettingsPage
                                     ->label('Enable Email Verification')
                                     ->hintIconTooltip('Require email verification for new accounts'),
                             ]),
-                        \Filament\Forms\Components\Grid::make(3)
-                            ->schema([
-                                \Filament\Forms\Components\FileUpload::make('logo_url')
-                                    ->label('Logo')
-                                    ->image()
-                                    ->imageEditor()
-                                    ->disk('public')
-                                    ->hintIcon('heroicon-o-information-circle')
-                                    ->directory('settings/logo')
-                                    ->hintIconTooltip('Upload your main site logo - recommended size 200x50px'),
-                                \Filament\Forms\Components\FileUpload::make('logo_dark_url')
-                                    ->label('Logo (Dark Mode)')
-                                    ->image()
-                                    ->imageEditor()
-                                    ->disk('public')
-                                    ->hintIcon('heroicon-o-information-circle')
-                                    ->directory('settings/logo')
-                                    ->hintIconTooltip('Upload a logo optimized for dark mode display'),
-                                \Filament\Forms\Components\FileUpload::make('favicon_url')
-                                    ->label('Favicon')
-                                    ->image()
-                                    ->imageCropAspectRatio('1:1')
-                                    ->disk('public')
-                                    ->hintIcon('heroicon-o-information-circle')
-                                    ->directory('settings/favicon')
-                                    ->hintIconTooltip('Upload your site favicon - will be cropped to square'),
-                            ]),
+
+                        // \Filament\Forms\Components\Grid::make(3)
+                        //     ->schema([
+                        //         \Filament\Forms\Components\FileUpload::make('logo_url')
+                        //             ->label('Logo')
+                        //             ->image()
+                        //             ->imageEditor()
+                        //             ->disk('public')
+                        //             ->hintIcon('heroicon-o-information-circle')
+                        //             ->directory('settings/logo')
+                        //             ->hintIconTooltip('Upload your main site logo - recommended size 200x50px'),
+                        //         \Filament\Forms\Components\FileUpload::make('logo_dark_url')
+                        //             ->label('Logo (Dark Mode)')
+                        //             ->image()
+                        //             ->imageEditor()
+                        //             ->disk('public')
+                        //             ->hintIcon('heroicon-o-information-circle')
+                        //             ->directory('settings/logo')
+                        //             ->hintIconTooltip('Upload a logo optimized for dark mode display'),
+                        //         \Filament\Forms\Components\FileUpload::make('favicon_url')
+                        //             ->label('Favicon')
+                        //             ->image()
+                        //             ->imageCropAspectRatio('1:1')
+                        //             ->disk('public')
+                        //             ->hintIcon('heroicon-o-information-circle')
+                        //             ->directory('settings/favicon')
+                        //             ->hintIconTooltip('Upload your site favicon - will be cropped to square'),
+                        //     ]),
 
                     ]),
 
