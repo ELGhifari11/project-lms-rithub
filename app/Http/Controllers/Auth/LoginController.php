@@ -11,25 +11,32 @@ class LoginController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => 'required|string',
+                'password' => 'required|string',
+            ]);
 
-        if (!auth()->attempt($validated)) {
+            if (!auth()->attempt($validated)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid credentials.',
+                ], 401);
+            }
+
+            $token = Auth::user()->createToken('login')->plainTextToken;
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User logged in successfully.',
+                'token' => $token,
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Invalid credentials.',
-            ], 401);
+                'message' => 'An error occurred during login.',
+            ], 500);
         }
-
-        $token = Auth::user()->createToken('login token for '. Auth::user()->email)->plainTextToken;
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User logged in successfully.',
-            'token' => $token,
-        ], 200);
     }
 
     public function logout(Request $request): JsonResponse

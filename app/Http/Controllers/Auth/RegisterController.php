@@ -5,104 +5,112 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\OtpEmail;
-use App\Models\OTP;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\View\View;
 
 class RegisterController extends Controller
 {
     public function register(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'email' => 'required|email|unique:users,email',
-            'username' => 'required|string|unique:users,username',
-            'password' => 'required|string|min:8',
-            'password_confirmation' => 'required|string|same:password',
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => 'required|email|unique:users,email',
+                'username' => 'required|string|unique:users,username',
+                'password' => 'required|string|min:8',
+                'password_confirmation' => 'required|string|same:password',
+            ]);
+            DB::beginTransaction();
+            $user = User::create([
+                'email' => $validated['email'],
+                'username' => $validated['username'],
+                'password' => Hash::make($validated['password'])
+            ]);
 
-        $user = User::create([
-            'email' => $validated['email'],
-            'username' => $validated['username'],
-            'password' => Hash::make($validated['password'])
-        ]);
+            event(new Registered($user));
 
-        $code = rand(100000, 999999);
-        $verification = OTP::create([
-            'user_id' => $user->id,
-            'unique_id' => uniqid(),
-            'otp' => Hash::make($code),
-            'type' => 'register',
-            'expires_at' => now()->addMinutes(10),
-        ]);
+            $token = $user->createToken("register")->plainTextToken;
+            DB::commit();
 
-        Mail::to($user->email)->send(new OtpEmail($code));
-
-        $token = $user->createToken('register token for' . $user->email)->plainTextToken;
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User registered successfully. Please verify your email.',
-            'unique_id' => $verification->unique_id,
-            'token' => $token,
-        ], 201);
+            return response()->json([
+                'message' => 'Register berhasil, silahkan cek email untuk verifikasi',
+                'token' => $token
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat registrasi. Silakan coba lagi.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function verify(Request $request, $uniqueId): JsonResponse
+    public function verificationNotice(): View
     {
-        $verify = OTP::whereUserId($request->user()->id)
-            ->whereUniqueId($uniqueId)
-            ->whereType('register')
-            ->where('expires_at', '>', now())
-            ->first();
+        return view('auth.verify-email');
+    }
 
-        if (!$verify) {
+    public function verify(Request $request, $userId): JsonResponse
+    {
+        if (!$request->hasValidSignature()) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid or expired verification code.'
+                'message' => 'Invalid signature or expired verification code.'
             ], 400);
         }
 
-        if (!Hash::check($request->input('otp'), $verify->otp)) {
-            $verify->status = 'invalid';
-            $verify->save();
+        $user = User::findOrFail($userId);
+
+        if (!$user) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid OTP code.'
+                'message' => 'User not found'
             ], 400);
         }
 
-        $user = User::findOrFail($verify->user_id);
-        $user->email_verified_at = now();
-        $user->save();
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
 
-        if (!$user) return response()->json([
-            'status' => 'error',
-            'message' => 'User not found.'
-        ], 404);
-        $verify->delete();
+            return response()->json([
+                'message' => 'Email address successfully verified',
+                'user' => $user
+            ], 200);
+        }
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Email verified successfully.',
-        ], 200);
+            'message' => 'Email address already verified'
+        ], 400);
     }
 
-    public function resendOtp(Request $request, $uniqueId): JsonResponse
+    public function resendEmailVerification(Request $request)
     {
-        $code = rand(100000, 999999);
-        OTP::where('unique_id', $uniqueId)->update([
-            'otp' => Hash::make($code),
-            'expires_at' => now()->addMinutes(10),
-            'status' => 'active',
-        ]);
+        $request->user()->sendEmailVerificationNotification();
 
-        Mail::to($request->user()->email)->send(new OtpEmail($code));
+        return response()->json(['message' => 'Email verifikasi telah dikirim ulang'], 200);
+    }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'OTP resent successfully.',
-        ], 200);
+    public function verifiedEmail(Request $request): View
+    {
+        try {
+            $id = $request->query('id');
+            $hash = $request->query('hash');
+            $expires = $request->query('expires');
+            $signature = $request->query('signature');
+
+            $response = Http::asForm()->post(config('app.url') . "/api/api/v1/email/verify/{$id}/{$hash}?expires={$expires}&signature={$signature}");
+
+            if ($response->successful()) {
+                return view('verification.success');
+            } else {
+                return view('verification.failed', [
+                    'message' => 'Gagal verifikasi email. Silahkan coba lagi'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return view('verifyFailed', [
+                'message' => 'terjadi kesalahan, silahkan coba lagi nanti.'
+            ]);
+        }
     }
 }
