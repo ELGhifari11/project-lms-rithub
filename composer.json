@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "rumah-it-hub",
+    "name": "rithub/lms",
     "type": "project",
     "description": "Filament Admin Panel Starter Kit with pre-configured packages and settings",
     "keywords": [
