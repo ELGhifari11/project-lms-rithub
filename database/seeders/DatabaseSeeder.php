@@ -49,7 +49,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(100)->create();
+        echo "Seeding data...";
+        echo "\n";
+        echo "Clearing data...";
+        echo "\n";
+        User::factory(50)->create();
+        echo "\n";
+        echo "Data user seeded successfully.";
+        Category::factory(3)->create();
+        echo "\n";
+        echo "Data category seeded successfully.";
+        $this->call([
+            SubCategorySeeder::class,
+        ]);
+        echo "\n";
+        echo "Data subcategory seeded successfully.";
+
 
         if (!User::where('email', 'admin@test.com')->exists()) {
             User::factory()->create([
