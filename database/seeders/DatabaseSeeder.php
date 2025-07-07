@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         echo "\n";
         echo "Clearing data...";
         echo "\n";
-        User::factory(50)->create();
+        User::factory(10)->create();
         echo "\n";
         echo "Data user seeded successfully.";
         Category::factory(3)->create();
