@@ -25,7 +25,7 @@ use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, HasPanelShield, LogsActivity;
+    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, LogsActivity, HasPanelShield;
 
     // public function sendEmailVerificationNotification()
     // {
@@ -37,12 +37,25 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+   protected $fillable = [
         'name',
-        'avatar_url',
         'email',
         'password',
-        'email_verified_at'
+        'avatar_url',
+        'cover_photo_url',
+        'username',
+        'phone',
+        'bio',
+        'role',
+        'profession',
+        'is_verified',
+        'point',
+        'last_login_at',
+        'email_verified_at',
+        'preference',
+        'price',
+        'lifetime_price',
+        'social_media',
     ];
 
     /**
@@ -65,8 +78,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_verified' => 'boolean',
+            'point' => 'integer',
+            'last_login_at' => 'datetime',
             'created_at' => 'datetime',
-            'updated_at' => 'datetime'
+            'updated_at' => 'datetime',
+            'social_media' => 'array',
         ];
     }
 
