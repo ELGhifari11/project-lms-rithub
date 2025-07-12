@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Milestone;
 use App\Models\ClassModel;
+use App\Models\ModuleOfCourse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

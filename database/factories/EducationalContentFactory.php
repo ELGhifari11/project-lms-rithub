@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\ModuleOfCourse;
+use App\Models\ClassModel;
 use App\Models\EducationalContent;
+use App\Models\ModuleOfCourse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,7 +33,7 @@ class EducationalContentFactory extends Factory
             'title_content' => $this->faker->sentence,
             'type' => $type,
             'order_index' => $this->faker->numberBetween(1, 10),
-            'thumbnail_path' => asset('images/light.png'),
+            'thumbnail_path' => $this->faker->url,
             'content_path' => match ($type) {
                 'video' => $this->faker->randomElement($contentLinkVideo),
                 'pdf'   => $this->faker->url,
@@ -44,4 +45,3 @@ class EducationalContentFactory extends Factory
         ];
     }
 }
-

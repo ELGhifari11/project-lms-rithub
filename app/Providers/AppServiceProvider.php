@@ -34,8 +34,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
-
         Gate::policy(Activity::class, ActivityPolicy::class);
 
         Gate::define('viewApiDocs', function (User $user) {
@@ -48,5 +46,29 @@ class AppServiceProvider extends ServiceProvider
 
 
         FilamentShield::prohibitDestructiveCommands(config('app.env') === 'production');
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            $isApiRequest = request()->is('api/v1/*');
+            if ($isApiRequest) {
+                $parts = parse_url($url);
+                $verifyEmailUrl = config('app.url')
+                    . '/v1/verified-email?id=' . $notifiable->getKey()
+                    . '&hash=' . sha1($notifiable->getEmailForVerification())
+                    . '&' . $parts['query'];
+
+                return (new MailMessage)
+                    ->subject('Verify Email Address')
+                    ->greeting('Hello ' . ($notifiable->name ?? $notifiable->username))
+                    ->line('Click the button below to verify your email address')
+                    ->action('Verify Email Address', $verifyEmailUrl)
+                    ->line('If you did not create this account, no further action is required.');
+            }
+
+            return (new MailMessage)
+            ->subject('Verify Email Address')
+            ->greeting('Hello ' . ($notifiable->name ?? $notifiable->username))
+            ->line('Click the button below to verify your email address')
+            ->action('Verify Email Address', $url)
+            ->line('If you did not create this account, no further action is required.');
+        });
     }
 }

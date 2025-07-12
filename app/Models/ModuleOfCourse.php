@@ -43,4 +43,3 @@ class ModuleOfCourse extends Model
         return $this->hasMany(Milestone::class,'module_of_course_id')->orderBy('order_index');
     }
 }
-

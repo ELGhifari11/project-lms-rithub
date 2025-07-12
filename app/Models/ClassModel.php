@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+
 class ClassModel extends Model
 {
     /** @use HasFactory<\Database\Factories\ClassModelFactory> */
-    use HasFactory, LogsActivity;
+    use HasFactory;
 
     protected $table = 'class_models';
     /**
@@ -36,11 +37,11 @@ class ClassModel extends Model
         'status' => 'boolean',
     ];
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['title', 'description', 'thumbnail_path', 'mentor_id', 'sub_category_id', 'duration_minutes', 'price', 'status', 'created_at', 'updated_at']);
-    }
+    // public function getActivitylogOptions(): LogOptions
+    // {
+    //     return LogOptions::defaults()
+    //         ->logOnly(['title', 'description', 'thumbnail_path', 'mentor_id', 'sub_category_id', 'duration_minutes', 'price', 'status', 'created_at', 'updated_at']);
+    // }
 
     // public function getThumbnailPathAttribute($value)
     // {
@@ -56,10 +57,10 @@ class ClassModel extends Model
     |--------------------------------------------------------------------------
     */
 
-    // public function bookmarks()
-    // {
-    //     return $this->morphMany(Bookmark::class, 'bookmarkable');
-    // }
+    public function bookmarks()
+    {
+        return $this->morphMany(Bookmark::class, 'bookmarkable');
+    }
 
     public function mentor()
     {
@@ -80,7 +81,6 @@ class ClassModel extends Model
     {
         return $this->morphMany(Enrollment::class, 'enrollable');
     }
-
 
     public function modules()
     {
@@ -108,15 +108,15 @@ class ClassModel extends Model
             })->get();
     }
 
-    // public function feedbacks()
-    // {
-    //     return $this->hasMany(Feedback::class, 'class_id');
-    // }
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'class_id');
+    }
 
-    // public function certificates()
-    // {
-    //     return $this->hasMany(Certificate::class, 'class_id');
-    // }
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class, 'class_id');
+    }
 
     public function milestones()
     {

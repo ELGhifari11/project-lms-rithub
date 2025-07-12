@@ -48,26 +48,26 @@ class SubCategory extends Model
     /**
      * Classes that belong to this subcategory.
      */
-    // public function classes()
-    // {
-    //     return $this->hasMany(ClassModel::class, 'sub_category_id');
-    // }
+    public function classes()
+    {
+        return $this->hasMany(ClassModel::class, 'sub_category_id');
+    }
 
     /**
      * Events that are categorized under this subcategory.
      */
-    // public function events()
-    // {
-    //     return $this->hasMany(Event::class, 'sub_category_id');
-    // }
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'sub_category_id');
+    }
 
     /**
      * Webinars that are categorized under this subcategory.
      */
-    // public function webinars()
-    // {
-    //     return $this->hasMany(WebinarRecording::class,'sub_category_id');
-    // }
+    public function webinars()
+    {
+        return $this->hasMany(WebinarRecording::class,'sub_category_id');
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -77,4 +77,3 @@ class SubCategory extends Model
 
 
 }
-

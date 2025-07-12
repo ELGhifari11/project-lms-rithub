@@ -50,10 +50,10 @@ class Milestone extends Model
     /**
      * Get the user milestones for the milestone.
      */
-    // public function userMilestones()
-    // {
-    //     return $this->hasMany(UserMilestone::class, 'milestone_id');
-    // }
+    public function userMilestones()
+    {
+        return $this->hasMany(UserMilestone::class, 'milestone_id');
+    }
 
 
 }

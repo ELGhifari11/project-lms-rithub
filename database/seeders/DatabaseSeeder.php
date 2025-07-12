@@ -49,57 +49,150 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // echo "Seeding data...";
-        // echo "\n";
-        // echo "Clearing data...";
-        // echo "\n";
-        // User::factory(10)->create();
-        // echo "\n";
-        // echo "Data user seeded successfully.";
-        // Category::factory(3)->create();
-        // echo "\n";
-        // echo "Data category seeded successfully.";
-        // $this->call([
-        //     SubCategorySeeder::class,
-        // ]);
-        // echo "\n";
-        // echo "Data subcategory seeded successfully.";
+        // User::factory(100)->create();
 
-        ClassModel::factory(100)->create();
+        //  //TODO hapus klo udh production
+        if (!User::where('email', 'admin@test.com')->exists()) {
+            User::factory()->create([
+                'name' => 'testing',
+                'email' => 'admin@test.com',
+                // 'role' => 'admin',
+                'password' => Hash::make('1'),
+                'email_verified_at' => Carbon::now()
+            ]);
+        }
+
+        if (!User::where('email', 'mentor@test.com')->exists()) {
+            User::factory()->create([
+                'name' => 'testing2',
+                'email' => 'mentor@test.com',
+                // 'role' => 'mentor',
+                'password' => Hash::make('1'),
+                'email_verified_at' => Carbon::now()
+            ]);
+        }
+
+        echo "Seeding data...";
+        echo "\n";
+        echo "Clearing data...";
+        echo "\n";
+        User::factory(25)->create();
+        echo "User created";
+        echo "\n";
+        Category::factory(3)->create();
+        echo "Category created";
+        echo "\n";
+        $this->call([
+            SubCategorySeeder::class,
+        ]);
+        echo "SubCategory created";
+        echo "\n";
+        ClassModel::factory(500)->create();
         echo "Class created";
         echo "\n";
-        ModuleOfCourse::factory(200)->create();
+        ModuleOfCourse::factory(1000)->create();
         echo "ModuleOfCourse created";
         echo "\n";
-        // Enrollment::factory(200)->create();
-        // echo "Enrollment created";
-        // echo "\n";
-        EducationalContent::factory(200)->create();
+        Bundle::factory(5)->create();
+        echo "Bundle created";
+        echo "\n";
+        BundleItem::factory(50)->create();
+        echo "BundleItem created";
+        echo "\n";
+        Order::factory(50)->create();
+        echo "Order created";
+        echo "\n";
+        OrderItem::factory(50)->create();
+        echo "OrderItem created";
+        echo "\n";
+        UserSubscription::factory(25)->create();
+        echo "UserSubscription created";
+        echo "\n";
+        Enrollment::factory(1500)->create();
+        echo "Enrollment created";
+        echo "\n";
+        EducationalContent::factory(1000)->create();
         echo "EducationalContent created";
         echo "\n";
-        Milestone::factory(200)->create();
+        WebinarRecording::factory(100)->create();
+        echo "WebinarRecording created";
+        echo "\n";
+        Milestone::factory(100)->create();
         echo "Milestone created";
         echo "\n";
-
-
-        // if (!User::where('email', 'admin@test.com')->exists()) {
-        //     User::factory()->create([
-        //         'name' => 'testing',
-        //         'email' => 'admin@test.com',
-        //         // 'role' => 'admin',
-        //         'password' => Hash::make('1'),
-        //         'email_verified_at' => Carbon::now()
-        //     ]);
-        // }
-
-        // if (!User::where('email', 'mentor@test.com')->exists()) {
-        //     User::factory()->create([
-        //         'name' => 'testing2',
-        //         'email' => 'mentor@test.com',
-        //         // 'role' => 'mentor',
-        //         'password' => Hash::make('1'),
-        //         'email_verified_at' => Carbon::now()
-        //     ]);
-        // }
+        UserMilestone::factory(25)->create();
+        echo "UserMilestone created";
+        echo "\n";
+        Point::factory(100)->create();
+        echo "Point created";
+        echo "\n";
+        Badge::factory(100)->create();
+        echo "Badge created";
+        echo "\n";
+        UserBadge::factory(100)->create();
+        echo "UserBadge created";
+        echo "\n";
+        Certificate::factory(100)->create();
+        echo "Certificate created";
+        echo "\n";
+        Promo::factory(100)->create();
+        echo "Promo created";
+        echo "\n";
+        PromoUsage::factory(100)->create();
+        echo "PromoUsage created";
+        echo "\n";
+        Feedback::factory(350)->create();
+        echo "Feedback created";
+        echo "\n";
+        SupportTicket::factory(50)->create();
+        echo "SupportTicket created";
+        echo "\n";
+        TicketResponse::factory(50)->create();
+        echo "TicketResponse created";
+        echo "\n";
+        Event::factory(25)->create();
+        echo "Event created";
+        echo "\n";
+        EventAttendee::factory(100)->create();
+        echo "EventAttendee created";
+        echo "\n";
+        Banner::factory(50)->create();
+        echo "Banner created";
+        echo "\n";
+        Follow::factory(25)->create();
+        echo "Follow created";
+        echo "\n";
+        Bookmark::factory(25)->create();
+        echo "Bookmark created";
+        echo "\n";
+        // UserClassContent::factory(100)->create();
+        // echo "UserClassContent created";
+        // echo "\n";
+        Wallet::factory(25)->create();
+        echo "Wallet created";
+        echo "\n";
+        CommissionSetting::factory(10)->create();
+        $itemType = [ClassModel::class, WebinarRecording::class, Bundle::class, User::class];
+        $intervals = ['monthly', 'annually', 'lifetime'];
+        foreach ($itemType as $type) {
+            foreach ($intervals as $interval) {
+                CommissionSetting::factory()->create([
+                    'item_type' => $type,
+                    'interval' => $interval,
+                    'is_percentage' => fake()->boolean(),
+                    'is_active' => true,
+                    'fixed_commission' => fake()->numberBetween(1, 100),
+                    'platform_share' => fake()->numberBetween(1, 10),
+                ]);
+            }
+        }
+        echo "CommissionSetting created";
+        echo "\n";
+        CommissionEarning::factory(100)->create();
+        echo "CommissionEarning created";
+        echo "\n";
+        Withdrawal::factory(100)->create();
+        echo "Withdrawal created";
+        echo "\n";
     }
 }

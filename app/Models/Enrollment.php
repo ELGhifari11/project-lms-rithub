@@ -42,10 +42,10 @@ class Enrollment extends Model
     }
 
     // Relasi ke model UserSubscription
-    // public function userSubscription()
-    // {
-    //     return $this->belongsTo(UserSubscription::class, 'subscription_id');
-    // }
+    public function userSubscription()
+    {
+        return $this->belongsTo(UserSubscription::class, 'subscription_id');
+    }
 
     // Mutator untuk mengatur status jika perlu
     public function getStatusAttribute($value)
