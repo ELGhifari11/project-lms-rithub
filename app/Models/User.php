@@ -25,7 +25,7 @@ use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, LogsActivity, HasPanelShield;
+    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, LogsActivity, HasPanelShield ;
 
     // public function sendEmailVerificationNotification()
     // {
@@ -107,6 +107,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         // return ($this->hasAnyRole(['super_admin', 'mentor']) || in_array($this->role, ['admin', 'mentor']));
         return true;
     }
+
 
     public function getActivitylogOptions(): LogOptions
     {
