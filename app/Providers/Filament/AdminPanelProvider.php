@@ -11,16 +11,18 @@ use App\Settings\KaidoSetting;
 use App\Filament\Pages\Register;
 use Filament\Support\Colors\Color;
 use Hasnayeen\Themes\ThemesPlugin;
+use Illuminate\Support\Facades\DB;
 use App\Livewire\CustomProfileInfo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 use App\Filament\Resources\LogResource;
 use Awcodes\LightSwitch\Enums\Alignment;
 use Filament\Forms\Components\FileUpload;
 use Rupadana\ApiService\ApiServicePlugin;
 use Awcodes\LightSwitch\LightSwitchPlugin;
+
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-
 use Hasnayeen\Themes\Filament\Pages\Themes;
 use Rmsramos\Activitylog\ActivitylogPlugin;
 use Hasnayeen\Themes\Http\Middleware\SetTheme;
@@ -221,6 +223,7 @@ class AdminPanelProvider extends PanelProvider
                         )
                         ->outlined(true)
                         ->stateless(false),
+
                     Provider::make('google')
                         ->label('Google')
                         ->icon('fab-google')
@@ -234,7 +237,6 @@ class AdminPanelProvider extends PanelProvider
                 ])
                 ->registration(true)
                 ->createUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
-                    logger(json_decode(json_encode($oauthUser), true));
                     $user = User::firstOrNew([
                         'email' => $oauthUser->getEmail(),
                     ]);
@@ -251,18 +253,20 @@ class AdminPanelProvider extends PanelProvider
                     // Save user first to get ID
                     $user->save();
 
-                    // DB::transaction(function () use ($user) {
+                    DB::transaction(function () use ($user) {
 
-                    //     $user->assignRole('mentor');
-                    //     $user->update(['role' => 'mentor']);
+                        $user->assignRole('mentor');
+                        $user->update(['role' => 'mentor']);
 
-                    //     $user->wallet()->create([
-                    //         'balance' => 0,
-                    //         'mentor_id' => $user->id
-                    //     ]);
-                    // });
+                        // $user->wallet()->create([
+                            //     'balance' => 0,
+                            //     'mentor_id' => $user->id
+                            // ]);
+                        });
+                        
+                        logger(json_decode(json_encode($oauthUser), true));
 
-                    // event(new Registered($user));
+                    event(new Registered($user));
 
                     return $user;
                 });
