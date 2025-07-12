@@ -105,23 +105,15 @@ class UserResource extends Resource
                             ->mask('9999-9999-9999')
                             ->autocomplete('tel'),
 
-                        TextInput::make('profession')
-                            ->label('Profesi')
-                            ->maxLength(100)
-                            ->prefixIcon('heroicon-m-briefcase')
-                            ->placeholder('Masukkan profesi'),
+
 
                         Grid::make(2)
                             ->schema([
-                                // Select::make('role')
-                                //     ->options([
-                                //         'admin' => 'admin',
-                                //         'mentor' => 'mentor',
-                                //         'student' => 'student',
-                                //     ])
-                                //     ->default('mentor')
-                                //     ->label('Role')
-                                //     ->required(),
+                                TextInput::make('profession')
+                                    ->label('Profesi')
+                                    ->maxLength(100)
+                                    ->prefixIcon('heroicon-m-briefcase')
+                                    ->placeholder('Masukkan profesi'),
 
                                 Select::make('role')
                                     ->label('Hak Akses')
