@@ -12,7 +12,6 @@ class Category extends Model
 
     protected $table = 'categories';
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -29,12 +28,7 @@ class Category extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function classes()
-    {
-        return $this->hasManyThrough(ClassModel::class, SubCategory::class, 'category_id', 'sub_category_id');
-    }
-
-    /**
+ /**
      * Get all subcategories for this category.
      */
     public function subCategories()

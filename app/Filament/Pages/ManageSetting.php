@@ -58,16 +58,15 @@ class ManageSetting extends SettingsPage
                                     ->hintIcon('heroicon-o-information-circle')
                                     ->label('Enable User Impersonation')
                                     ->hintIconTooltip('Allow administrators to impersonate other users'),
-                                Toggle::make('maintenance_mode')
-                                    ->hintIcon('heroicon-o-information-circle')
-                                    ->label('Enable Maintenance Mode')
-                                    ->hintIconTooltip('Put the site in maintenance mode - only admins can access'),
-                                Toggle::make('email_verification_enabled')
+                                    Toggle::make('email_verification_enabled')
                                     ->hintIcon('heroicon-o-information-circle')
                                     ->label('Enable Email Verification')
                                     ->hintIconTooltip('Require email verification for new accounts'),
+                                    Toggle::make('maintenance_mode')
+                                        ->hintIcon('heroicon-o-information-circle')
+                                        ->label('Enable Maintenance Mode')
+                                        ->hintIconTooltip('Put the site in maintenance mode - only admins can access'),
                             ]),
-
                         \Filament\Forms\Components\Grid::make(3)
                             ->schema([
                                 \Filament\Forms\Components\FileUpload::make('logo_url')
@@ -89,7 +88,6 @@ class ManageSetting extends SettingsPage
                                 \Filament\Forms\Components\FileUpload::make('favicon_url')
                                     ->label('Favicon')
                                     ->image()
-                                    ->imageEditor()
                                     ->imageCropAspectRatio('1:1')
                                     ->disk('public')
                                     ->hintIcon('heroicon-o-information-circle')

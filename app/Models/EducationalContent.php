@@ -35,13 +35,13 @@ class EducationalContent extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function getThumbnailPathAttribute($value)
-    {
-        if (request()->is('admin/*') || app()->runningInConsole()) {
-            return $value;
-        }
-        return $value ? asset('storage/' . ltrim($value, '/')) : null;
-    }
+    // public function getThumbnailPathAttribute($value)
+    // {
+    //     if (request()->is('admin/*') || app()->runningInConsole()) {
+    //         return $value;
+    //     }
+    //     return $value ? asset('storage/' . ltrim($value, '/')) : null;
+    // }
 
     public function scopeOrdered($query)
     {

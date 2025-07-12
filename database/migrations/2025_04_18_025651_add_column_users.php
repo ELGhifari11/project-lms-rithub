@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('password')->nullable(true)->change();
             $table->string('username', 50)->unique();
             $table->string('phone', 20)->nullable();
+            $table->string('avatar_url')->nullable();
             $table->string('cover_photo_url')->nullable();
             $table->text('bio')->nullable();
             $table->string('role')->default('student');
@@ -25,8 +26,8 @@ return new class extends Migration
             $table->string('profession')->nullable();
             $table->unsignedInteger('preference')->nullable();
             $table->json('social_media')->nullable();
-            $table->decimal('price', 9, 2)->nullable()->unsigned();
-            $table->decimal('lifetime_price', 9, 2)->nullable()->unsigned();
+            $table->bigInteger('price')->default(0)->unsigned();
+            $table->bigInteger('lifetime_price')->default(0)->unsigned();
         });
     }
 

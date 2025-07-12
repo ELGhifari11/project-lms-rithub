@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('mentor_id');
             $table->unsignedBigInteger('order_id');
-            $table->decimal('amount', 9, 2);
+            $table->bigInteger('amount');
+            $table->bigInteger('mentor_commission');
+            $table->bigInteger('platform_fees');
             $table->string('status');
             $table->timestamps();
         });

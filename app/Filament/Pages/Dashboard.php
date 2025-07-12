@@ -2,17 +2,16 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Form;
-use Filament\Actions\Action;
-use Illuminate\Contracts\View\View;
-use Filament\Forms\Components\Select;
-use Filament\Support\Enums\Alignment;
-use Filament\Forms\Components\Fieldset;
-use Filament\Notifications\Notification;
-use Filament\Forms\Components\DatePicker;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use App\Models\Kantor; // Pastikan untuk mengimport model Kantor
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Form;
+use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
+use Illuminate\Contracts\View\View;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Alignment;
 
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -32,36 +31,64 @@ class Dashboard extends \Filament\Pages\Dashboard
     public ?string $startDate = null;
     public ?string $endDate = null;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            // Action::make('downloadPdf')
-            //     ->label('Unduh PDF')
-            //     ->translateLabel()
-            //     ->icon('heroicon-o-printer')
-            //     ->modalHeading('Pilih Periode Laporan')
-            //     ->modalDescription('Silahkan Pilih Rentang Waktu yang Anda Inginkan')
-            //     ->modalSubmitActionLabel('Unduh PDF')
-            //     ->modalIcon('heroicon-o-printer')
-            //     ->modalWidth('md')
-            //     ->form([
-            //         DatePicker::make('startDate')
-            //             ->label('Tanggal Mulai')
-            //             ->translateLabel()
-            //             ->required(),
-            //         DatePicker::make('endDate')
-            //             ->label('Tanggal Akhir')
-            //             ->translateLabel()
-            //             ->required(),
-            //     ])
-            //     ->action(function (array $data) {
-            //         // Logic untuk generate PDF
-            //         return response()->streamDownload(function () use ($data) {
-            //             // Logic untuk generate PDF
-            //         }, 'laporan.pdf');
-            //     })
-            //     ->color('primary')
-            //     ->modalAlignment(Alignment::Center)
-        ];
-    }
+    // protected function getHeaderActions(): array
+    // {
+    //     return [
+
+    //         Action::make('downloadPdf')
+    //             ->label('Report Download')
+    //             ->translateLabel()
+    //             ->icon('heroicon-o-printer')
+    //             ->modalHeading('Pilih Periode Laporan')
+    //             ->modalDescription('Silahkan Pilih Rentang Waktu yang Anda Inginkan')
+    //             ->modalSubmitActionLabel('Unduh Laporan')
+    //             ->modalIcon('heroicon-o-printer')
+
+    //             ->modalWidth('md')
+    //             ->form([
+    //                 DatePicker::make('startDate')
+    //                     ->label('Start Date')
+    //                     ->translateLabel(),
+    //                 DatePicker::make('endDate')
+    //                     ->label('End Date')
+    //                     ->translateLabel(),
+    //             ])
+    //             ->action(function (array $data) {
+    //                 // Redirect ke halaman unduh PDF dengan tanggal dari form modal
+    //                 $this->redirectRoute('laporan.pdf.download', [
+    //                     'startDate' => $data['startDate'],
+    //                     'endDate' => $data['endDate'],
+    //                 ]);
+    //             })
+    //             ->color('primary')
+    //             ->modalAlignment(Alignment::Center),
+    //         // ->slideOver(),
+
+    //         // Notification::make()
+    //         // ->title('Unduh Laporan')
+    //     ];
+    // }
+    // public function filtersForm(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([
+    //             Fieldset::make('FILTER')
+    //                 ->schema([
+    //                     DatePicker::make('startDate')
+    //                         ->prefixIcon('heroicon-m-check-circle')
+    //                         ->prefixIconColor('primary')
+    //                         ->label('Start Date')
+    //                         ->translateLabel()
+    //                         ->inlineLabel()
+    //                         ->required(),
+    //                     DatePicker::make('endDate')
+    //                         ->prefixIcon('heroicon-m-check-circle')
+    //                         ->prefixIconColor('primary')
+    //                         ->label('End Date')
+    //                         ->translateLabel()
+    //                         ->inlineLabel()
+    //                         ->required(),
+    //                 ])->columns(2),
+    //         ]);
+    // }
 }

@@ -26,9 +26,9 @@ class OrderItemFactory extends Factory
             'order_id' => $orderId,
             'item_type' => $kelas,
             'item_id' => $kelasId,
-            'price' => $this->faker->numberBetween(10000, 500000),
+            'price' => $this->faker->randomFloat(2, 10, 1000),
             'interval' => $this->faker->randomElement(['monthly', 'yearly', 'lifetime']),
-            'admin_fee' => $this->faker->numberBetween(1000, 10000),
+            'admin_fee' => $this->faker->randomFloat(2, 0, 10),
             'created_at' => $this->faker->dateTimeThisYear(),
         ];
     }

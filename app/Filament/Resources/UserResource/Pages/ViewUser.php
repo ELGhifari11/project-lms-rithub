@@ -9,11 +9,11 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewUser extends ViewRecord
 {
     protected static string $resource = UserResource::class;
+    protected static bool $canCreateAnother = false;
 
-    protected function getHeaderActions(): array
+    //customize redirect after create
+    public function getRedirectUrl(): string
     {
-        return [
-            Actions\EditAction::make(),
-        ];
+        return $this->getResource()::getUrl('index');
     }
 }

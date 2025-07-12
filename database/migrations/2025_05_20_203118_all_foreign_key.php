@@ -94,15 +94,6 @@ return new class extends Migration
             $table->foreign('class_id')->references('id')->on('class_models')->cascadeOnDelete();
         });
 
-        Schema::table('support_tickets', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-        });
-
-        Schema::table('ticket_responses', function (Blueprint $table) {
-            $table->foreign('ticket_id')->references('id')->on('support_tickets')->cascadeOnDelete();
-            $table->foreign('responder_id')->references('id')->on('users')->nullOnDelete();
-        });
-
         Schema::table('events', function (Blueprint $table) {
             $table->foreign('sub_category_id')->references('id')->on('sub_categories')->restrictOnDelete();
         });
@@ -110,10 +101,6 @@ return new class extends Migration
         Schema::table('event_attendees', function (Blueprint $table) {
             $table->foreign('event_id')->references('id')->on('events')->cascadeOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-        });
-
-        Schema::table('audit_logs', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });
 
         Schema::table('bookmarks', function (Blueprint $table) {

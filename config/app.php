@@ -123,9 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'xendit' => [
-        'server_key' => env('XENDIT_SERVER_KEY'),
-        'webhook_token' => env('XENDIT_WEBHOOK_TOKEN')
+    'xendit' =>[
+        'api_key' => env('XENDIT_API_KEY'),
+        'webhook_token' => env('XENDIT_WEBHOOK_TOKEN'),
     ]
 
 ];

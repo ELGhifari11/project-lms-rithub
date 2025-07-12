@@ -22,6 +22,8 @@ class CommissionEarningFactory extends Factory
             'mentor_id' => User::all()->where('role', 'mentor')->random()->id,
             'order_id' => Order::all()->random()->id,
             'amount' => fake()->numberBetween(50000, 1000000),
+            'mentor_commission' => fake()->numberBetween(25000, 500000),
+            'platform_fees' => fake()->numberBetween(25000, 500000),
             'status' => fake()->randomElement(['pending', 'paid', 'cancelled']),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now')

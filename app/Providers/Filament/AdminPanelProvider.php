@@ -13,14 +13,12 @@ use Filament\Support\Colors\Color;
 use Hasnayeen\Themes\ThemesPlugin;
 use Illuminate\Support\Facades\DB;
 use App\Livewire\CustomProfileInfo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use App\Filament\Resources\LogResource;
 use Awcodes\LightSwitch\Enums\Alignment;
 use Filament\Forms\Components\FileUpload;
 use Rupadana\ApiService\ApiServicePlugin;
 use Awcodes\LightSwitch\LightSwitchPlugin;
-
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Hasnayeen\Themes\Filament\Pages\Themes;
@@ -76,7 +74,6 @@ class AdminPanelProvider extends PanelProvider
             return defined("$colorClass::$colorName")
                 ? constant("$colorClass::$colorName")
                 : constant("$colorClass::$default");
-
         } catch (\Exception $e) {
             return constant("\Filament\Support\Colors\Color::$default");
         }
@@ -98,9 +95,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->defaultThemeMode(ThemeMode::System)
-            ->favicon(fn () => $this->settings?->favicon_url ? asset($this->settings->favicon_url) : asset('images/rithub-favicon.png'))
-            ->brandLogo(fn () => $this->settings?->logo_url ? asset($this->settings->logo_url) : asset('images/rithub-logo.png'))
-            ->darkModeBrandLogo(fn () => $this->settings?->logo_dark_url ? asset($this->settings->logo_dark_url) : asset('images/rithub-logo-dark.png'))
+            ->favicon(fn() => $this->settings?->favicon_url ? asset($this->settings->favicon_url) : asset('images/rithub-favicon.png'))
+            ->brandLogo(fn() => $this->settings?->logo_url ? asset($this->settings->logo_url) : asset('images/rithub-logo.png'))
+            ->darkModeBrandLogo(fn() => $this->settings?->logo_dark_url ? asset($this->settings->logo_dark_url) : asset('images/rithub-logo-dark.png'))
             ->brandName($this->settings->site_name ?? 'Site Name')
             ->brandLogoHeight('4rem')
             ->sidebarCollapsibleOnDesktop(true)
@@ -147,7 +144,7 @@ class AdminPanelProvider extends PanelProvider
     {
         $plugins = [
             FilamentProgressbarPlugin::make()
-                ->color((new Themes())->getColor() ?? 'pink'),
+                ->color((new Themes())->getColor() ?? '#ec4899'),
             FilamentApexChartsPlugin::make(),
             LightSwitchPlugin::make()
                 ->position(Alignment::TopCenter),
@@ -155,8 +152,7 @@ class AdminPanelProvider extends PanelProvider
                 ->resource(LogResource::class)
                 ->navigationGroup('Settings')
                 ->navigationIcon('heroicon-m-document-magnifying-glass'),
-            ThemesPlugin::make()
-                ,
+            ThemesPlugin::make(),
             FilamentShieldPlugin::make()
             // ->gridColumns([
             //     'default' => 1,
@@ -223,7 +219,6 @@ class AdminPanelProvider extends PanelProvider
                         )
                         ->outlined(true)
                         ->stateless(false),
-
                     Provider::make('google')
                         ->label('Google')
                         ->icon('fab-google')
@@ -237,6 +232,7 @@ class AdminPanelProvider extends PanelProvider
                 ])
                 ->registration(true)
                 ->createUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+                    logger(json_decode(json_encode($oauthUser), true));
                     $user = User::firstOrNew([
                         'email' => $oauthUser->getEmail(),
                     ]);
@@ -258,13 +254,11 @@ class AdminPanelProvider extends PanelProvider
                         $user->assignRole('mentor');
                         $user->update(['role' => 'mentor']);
 
-                        // $user->wallet()->create([
-                            //     'balance' => 0,
-                            //     'mentor_id' => $user->id
-                            // ]);
-                        });
-                        
-                        logger(json_decode(json_encode($oauthUser), true));
+                        $user->wallet()->create([
+                            'balance' => 0,
+                            'mentor_id' => $user->id
+                        ]);
+                    });
 
                     event(new Registered($user));
 

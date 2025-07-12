@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "rithub/lms",
+    "name": "siubie/kaido-kit",
     "type": "project",
     "description": "Filament Admin Panel Starter Kit with pre-configured packages and settings",
     "keywords": [
@@ -33,12 +33,12 @@
         "pxlrbt/filament-excel": "^2.3",
         "resend/resend-laravel": "^0.16.1",
         "rmsramos/activitylog": "^1.0",
+        "rupadana/filament-api-service": "^3.4.4",
         "socialiteproviders/google": "^4.1",
         "stechstudio/filament-impersonate": "^3.15"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
-        "beyondcode/laravel-query-detector": "^2.1",
         "fakerphp/faker": "^1.23",
         "laravel-shift/blueprint": "^2.10",
         "laravel/pail": "^1.1",

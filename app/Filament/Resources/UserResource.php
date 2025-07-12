@@ -2,49 +2,59 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Support\RawJs;
+use Illuminate\Support\Str;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Grid;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use App\Filament\Exports\UserExporter;
+use App\Filament\Imports\UserImporter;
 use Filament\Forms\Components\Section;
 use Filament\Support\Enums\FontWeight;
+use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
-use App\Filament\Resources\UserResource\RelationManagers;
+use Filament\Infolists\Components\Section as InfolistSection;
 use Rmsramos\Activitylog\Actions\ActivityLogTimelineTableAction;
+use Rmsramos\Activitylog\RelationManagers\ActivitylogRelationManager;
 
 class UserResource extends Resource
 {
-    protected static ?string $model = User::class;
 
+    /**
+     ** PROTECTED PROPERTIES
+     * * * * * * * * * * * * * *      * * * * * * * * * * * * *
+     * * * * * * * * * * * * * *      * * * * * * * * * * * * *
+     ** PROTECTED PROPERTIES
+     */
+    protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Users';
 
-    public static function canBeImpersonated($record): bool
-    {
-        return $record instanceof \App\Models\User && $record->getKey() !== Auth::user()->id;
-    }
 
+    /**
+     ** FORM COLUMNS FOR THE FORM.     FORM COLUMNS FOR THE FORM.
+     * * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * *
+     ** FORM COLUMNS FOR THE FORM.     FORM COLUMNS FOR THE FORM.
+     */
     public static function form(Form $form): Form
     {
         return $form
@@ -105,117 +115,34 @@ class UserResource extends Resource
                             ->mask('9999-9999-9999')
                             ->autocomplete('tel'),
 
+                        TextInput::make('profession')
+                            ->label('Profesi')
+                            ->maxLength(100)
+                            ->prefixIcon('heroicon-m-briefcase')
+                            ->placeholder('Masukkan profesi'),
+
+                        Select::make('role')
+                            ->relationship('roles', 'name')
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->optionsLimit(10)
+                            ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
 
 
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('profession')
-                                    ->label('Profesi')
-                                    ->maxLength(100)
-                                    ->prefixIcon('heroicon-m-briefcase')
-                                    ->placeholder('Masukkan profesi'),
-
-                                Select::make('role')
-                                    ->label('Hak Akses')
-                                    ->relationship('roles', 'name')
-                                    ->required()
-                                    ->searchable()
-                                    ->preload()
-                                    ->optionsLimit(10)
-                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
-                            ]),
 
                     ]),
             ])
             ->columns(['lg' => 3]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                \Filament\Infolists\Components\Section::make('Profil User')
-                    ->icon('heroicon-o-user')
-                    ->columns(2)
-                    ->schema([
-                        \Filament\Infolists\Components\ImageEntry::make('avatar_url')
-                            ->label('Avatar')
-                            ->circular()
-                            ->state(fn(?object $record) => match (true) {
-                                !$record => 'https://ui-avatars.com/api/?name=default',
-                                empty($record->avatar_url) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name),
-                                str_contains($record->avatar_url, '/storage/https://') => str_replace(config('app.url') . '/storage/', '', $record->avatar_url),
-                                default => $record->avatar_url,
-                            })
-                            ->columnSpan(1),
-                        TextEntry::make('name')
-                            ->label('Nama Lengkap')
-                            ->icon('heroicon-o-user')
-                            ->columnSpan(1),
-                        TextEntry::make('is_verified')
-                            ->label(' ')
-                            ->icon(fn($state) => $state ? 'heroicon-m-check-badge' : 'heroicon-m-x-circle')
-                            ->formatStateUsing(fn($state) => $state ? 'Verified' : 'Unverified')
-                            ->columnSpan(1),
-                        TextEntry::make('username')
-                            ->label('Username')
-                            ->icon('heroicon-m-at-symbol')
-                            ->columnSpan(1),
-                        TextEntry::make('email')
-                            ->label('Email')
-                            ->icon('heroicon-o-envelope')
-                            ->columnSpan(1),
-                        TextEntry::make('phone')
-                            ->label('No. HP')
-                            ->icon('heroicon-o-phone')
-                            ->columnSpan(1),
-                        TextEntry::make('profession')
-                            ->label('Profesi')
-                            ->IconColor('warning')
-                            ->badge()
-                            ->icon('heroicon-m-briefcase')
-                            ->columnSpan(1),
-                        TextEntry::make('bio')
-                            ->label('Bio')
-                            ->icon('heroicon-o-document-text')
-                            ->columnSpan(2),
-                    ]),
-                \Filament\Infolists\Components\Section::make('Informasi Detail')
-                    ->icon('heroicon-o-information-circle')
-                    ->columns([
-                        'default' => 1,
-                        'sm' => 2,
-                    ])
-                    ->schema([
-                        \Filament\Infolists\Components\Grid::make(2)
-                            ->columnSpan(1)
-                            ->schema([
-                                TextEntry::make('role')
-                                    ->label('Role')
-                                    ->badge()
-                                    ->icon('heroicon-o-user-group'),
 
-                                TextEntry::make('point')
-                                    ->label('Poin')
-                                    ->icon('heroicon-m-star'),
-
-                                TextEntry::make('price')
-                                    ->label('Harga Subscription')
-                                    ->icon('heroicon-o-currency-dollar'),
-
-                                TextEntry::make('lifetime_price')
-                                    ->label('Harga Lifetime')
-                                    ->icon('heroicon-o-currency-dollar'),
-                            ]),
-
-                        TextEntry::make('social_media')
-                            ->label('Akun Social Media')
-                            ->columnSpan(1)
-                            ->icon('heroicon-o-hashtag')
-                            ->formatStateUsing(fn($state) => collect($state)->map(fn($item) => ($item['platform'] ?? '-') . ': ' . ($item['url'] ?? '-'))->implode(', ')),
-                    ]),
-            ]);
-    }
+    /**
+     ** TABLE COLUMNS FOR THE TABLE.     TABLE COLUMNS FOR THE TABLE.
+     * * * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * * *
+     ** TABLE COLUMNS FOR THE TABLE.     TABLE COLUMNS FOR THE TABLE.
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -284,7 +211,6 @@ class UserResource extends Resource
                     ->tooltip('Username'),
 
                 Tables\Columns\TextColumn::make('role')
-                    ->label('Role Label')
                     ->searchable()
                     ->badge()
                     ->tooltip('User Role'),
@@ -422,6 +348,8 @@ class UserResource extends Resource
             ->headerActions([
                 ExportAction::make()
                     ->exporter(UserExporter::class),
+                ImportAction::make()
+                    ->importer(UserImporter::class)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -432,20 +360,144 @@ class UserResource extends Resource
             ]);
     }
 
+
+
+    /**
+     ** INFOLIST INFOLIST INFOLIST.     INFOLIST INFOLIST INFOLIST.
+     * * * * * * * * * * * * * * *      * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * *      * * * * * * * * * * * * * * * * *
+     ** INFOLIST INFOLIST INFOLIST.     INFOLIST INFOLIST INFOLIST.
+     */
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                \Filament\Infolists\Components\Section::make('Profil User')
+                    ->icon('heroicon-o-user')
+                    ->columns(2)
+                    ->schema([
+                        \Filament\Infolists\Components\ImageEntry::make('avatar_url')
+                            ->label('Avatar')
+                            ->circular()
+                            ->state(fn(?object $record) => match (true) {
+                                !$record => 'https://ui-avatars.com/api/?name=default',
+                                empty($record->avatar_url) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name),
+                                str_contains($record->avatar_url, '/storage/https://') => str_replace(config('app.url') . '/storage/', '', $record->avatar_url),
+                                default => $record->avatar_url,
+                            })
+                            ->columnSpan(1),
+                        TextEntry::make('name')
+                            ->label('Nama Lengkap')
+                            ->icon('heroicon-o-user')
+                            ->columnSpan(1),
+                        TextEntry::make('is_verified')
+                            ->label(' ')
+                            ->icon(fn($state) => $state ? 'heroicon-m-check-badge' : 'heroicon-m-x-circle')
+                            ->formatStateUsing(fn($state) => $state ? 'Verified' : 'Unverified')
+                            ->columnSpan(1),
+                        TextEntry::make('username')
+                            ->label('Username')
+                            ->icon('heroicon-m-at-symbol')
+                            ->columnSpan(1),
+                        TextEntry::make('email')
+                            ->label('Email')
+                            ->icon('heroicon-o-envelope')
+                            ->columnSpan(1),
+                        TextEntry::make('phone')
+                            ->label('No. HP')
+                            ->icon('heroicon-o-phone')
+                            ->columnSpan(1),
+                        TextEntry::make('profession')
+                            ->label('Profesi')
+                            ->IconColor('warning')
+                            ->badge()
+                            ->icon('heroicon-m-briefcase')
+                            ->columnSpan(1),
+                        TextEntry::make('bio')
+                            ->label('Bio')
+                            ->icon('heroicon-o-document-text')
+                            ->columnSpan(2),
+                    ]),
+                \Filament\Infolists\Components\Section::make('Informasi Detail')
+                    ->icon('heroicon-o-information-circle')
+                    ->columns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                    ->schema([
+                        \Filament\Infolists\Components\Grid::make(2)
+                            ->columnSpan(1)
+                            ->schema([
+                                TextEntry::make('role')
+                                    ->label('Role')
+                                    ->badge()
+                                    ->icon('heroicon-o-user-group'),
+
+                                TextEntry::make('point')
+                                    ->label('Poin')
+                                    ->icon('heroicon-m-star'),
+
+                                TextEntry::make('price')
+                                    ->label('Harga Subscription')
+                                    ->icon('heroicon-o-currency-dollar'),
+
+                                TextEntry::make('lifetime_price')
+                                    ->label('Harga Lifetime')
+                                    ->icon('heroicon-o-currency-dollar'),
+                            ]),
+
+                        TextEntry::make('social_media')
+                            ->label('Akun Social Media')
+                            ->columnSpan(1)
+                            ->icon('heroicon-o-hashtag')
+                            ->formatStateUsing(fn($state) => collect($state)->map(fn($item) => ($item['platform'] ?? '-') . ': ' . ($item['url'] ?? '-'))->implode(', ')),
+                    ]),
+            ]);
+    }
+
+
+
+    /**
+     ** GET RELATION FUNCTION()      GET RELATION FUNCTION()
+     * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * *       * * * * * * * * * * * * * * * * * *
+     ** GET RELATION FUNCTION()      GET RELATION FUNCTION()
+     */
     public static function getRelations(): array
     {
         return [
-            //
+            ActivitylogRelationManager::class,
         ];
     }
 
+
+
+    /**
+     ** GET PAGES FUNCTION()      GET PAGES FUNCTION()
+     * * * * * * * * * * * * *      * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * *      * * * * * * * * * * * * * * * * * *
+     ** GET PAGES FUNCTION()      GET PAGES FUNCTION()
+     */
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
             'view' => Pages\ViewUser::route('/{record}'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+
+    public static function canCreate(): bool
+    /*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Determine if the user can create a new resource.
+     *
+     * @return bool
+     */
+    /*******  fc307f66-63a2-4d0e-b439-b4b0a1fb26fc  *******/
+    {
+        return true;
     }
 }

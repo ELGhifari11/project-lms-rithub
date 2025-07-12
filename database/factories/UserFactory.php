@@ -21,13 +21,13 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
-  public function definition(): array
+    public function definition(): array
     {
         // 80% chance of being mentor, 20% chance of being admin
         $role = $this->faker->randomElement(['mentor', 'mentor', 'mentor', 'student', 'admin']);
 
         // Generate base name that will be used for username and email
-        $name = $this->faker->unique()->name();
+        $name = $this->faker->unique()->email();
         $firstName = Str::slug(Str::before($name, ' '));
         $lastName = Str::slug(Str::after($name, ' '));
 
@@ -61,11 +61,11 @@ class UserFactory extends Factory
                 return $subCategory->name ?? null;
             },
             'price' => $role === 'mentor' ?
-                $this->faker->numberBetween(100000, 1000000) : null,
+                $this->faker->numberBetween(100000, 1000000) : 0,
             'lifetime_price' => $role === 'mentor' ? function (array $attributes) {
                 $price = $attributes['price'] ?? 50000;
                 return $this->faker->numberBetween($price + 10000, $price + 100000);
-            } : null,
+            } : 0,
             'point' => $this->faker->numberBetween(0, 1000),
             'last_login_at' => $this->faker->optional()->dateTimeBetween('-30 days', 'now'),
             'email_verified_at' => now(),
@@ -84,5 +84,4 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
-
 }

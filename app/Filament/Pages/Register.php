@@ -28,7 +28,7 @@ class Register extends BaseRegister
             'form' => $this->form(
                 $this->makeForm()
                     ->schema([
-                      $this->getNameFormComponent(),
+                        $this->getNameFormComponent(),
                         $this->getUsernameFormComponent(),
                         $this->getEmailFormComponent(),
                         $this->getPhoneFormComponent(),
@@ -187,14 +187,12 @@ class Register extends BaseRegister
                 $user->update(['role' => 'mentor']);
 
                 // Create wallet for the user with 0 initial balance
-                // $user->wallet()->create([
-                //     'balance' => 0,
-                // ]);
+                $user->wallet()->create([
+                    'balance' => 0,
+                ]);
             });
-            logger($user);
 
             event(new Registered($user));
-
 
             return $user;
 

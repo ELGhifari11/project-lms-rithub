@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('content_path');
             $table->text('description');
-            $table->decimal('price', 9, 2)->default(0)->unsigned();
-            $table->decimal('lifetime_price', 9, 2)->default(0)->unsigned();
+            $table->biginteger('price')->default(0)->unsigned();
+            $table->bigInteger('lifetime_price')->default(0)->unsigned();
             $table->integer('views')->default(0);
             $table->integer('duration')->default(0);
             $table->boolean('status');

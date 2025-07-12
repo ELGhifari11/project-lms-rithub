@@ -35,8 +35,8 @@ class WithdrawalFactory extends Factory
         $wallet = Wallet::firstOrCreate(
             ['mentor_id' => $mentorId],
             [
-                'balance' => fake()->numberBetween(50000, 1000000),
-                'bank_name' => fake()->company(),
+                'balance' => fake()->randomFloat(2, 1000, 1000000),
+                'bank_name' => fake()->randomElement(['BCA', 'BNI', 'MANDIRI', 'BRI']),
                 'account_holder_name' => fake()->name(),
                 'bank_account_number' => fake()->creditCardNumber(),
             ]
@@ -44,14 +44,16 @@ class WithdrawalFactory extends Factory
         $now = now();
         $monthAgo = $now->copy()->subMonth();
 
+        $status = fake()->randomElement(['PENDING','COMPLETED','FAILED']);
+
         return [
             'mentor_id' => $mentorId,
             'wallet_id' => $wallet->id,
             'amount' => fake()->numberBetween(100000, 1000000),
-            'status' => fake()->randomElement(['PENDING', 'APPROVED', 'REJECTED']),
+            'status' => $status,
             'note' => fake()->optional()->text(200),
             'requested_at' => fake()->dateTimeBetween($monthAgo, $now),
-            'processed_at' => fake()->optional()->dateTimeBetween($monthAgo, $now),
+            'processed_at' => $status !== 'PENDING' ? fake()->dateTimeBetween($monthAgo, $now) : null,
             'created_at' => fake()->dateTimeBetween($monthAgo, $now),
             'updated_at' => fake()->dateTimeBetween($monthAgo, $now)
         ];

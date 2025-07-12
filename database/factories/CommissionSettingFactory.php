@@ -26,7 +26,7 @@ class CommissionSettingFactory extends Factory
             'interval' => fake()->randomElement(['monthly', 'yearly', 'lifetime']),
             'is_percentage' => fake()->boolean(),
             'is_active' => fake()->boolean(),
-            'fixed_commission' => fake()->numberBetween(10000, 99999),
+            'fixed_commission' => fake()->numberBetween(10000, 1000000),
             'platform_share' => fake()->numberBetween(1, 100),
         ];
     }

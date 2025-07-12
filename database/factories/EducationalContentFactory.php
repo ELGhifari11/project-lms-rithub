@@ -33,7 +33,7 @@ class EducationalContentFactory extends Factory
             'title_content' => $this->faker->sentence,
             'type' => $type,
             'order_index' => $this->faker->numberBetween(1, 10),
-            'thumbnail_path' => $this->faker->url,
+            'thumbnail_path' => asset('images/light.png'),
             'content_path' => match ($type) {
                 'video' => $this->faker->randomElement($contentLinkVideo),
                 'pdf'   => $this->faker->url,

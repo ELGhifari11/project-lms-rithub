@@ -18,6 +18,7 @@ return new class extends SettingsMigration
         $this->migrator->add('KaidoSetting.email_verification_enabled', true);
         $this->migrator->add('KaidoSetting.impersonation_enabled', true);
         $this->migrator->add('KaidoSetting.maintenance_mode', false);
+    
     }
 };
 

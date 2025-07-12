@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class WhatsAppController extends Controller
 {
@@ -33,17 +33,13 @@ class WhatsAppController extends Controller
 
     public function messagePasswordRegister($phone, $password, $name, $currentDate)
     {
-        $message = "Account registration was successful!\n\n" .
-            "This is your new password.\n\n" .
-            "========== Credentials ==========\n\n" .
-            "*Date*: {$currentDate}\n\n" .
-            "*Name*: {$name}\n" .
-            "*Phone*: {$phone}\n" .
-            "*Password*: {$password}\n" .
-            "==============================\n" .
-            "Please change the password after login to secure your account.\n" .
-            "Login here: https://rithub.id/login\n\n" .
-            "Thank you!";
+        $message = "*📋 REGISTRASI AKUN BERHASIL* :\n\n" .
+            "Date: {$currentDate}\n\n" .
+            "Nama: *{$name}*\n\n" .
+            "Password: `{$password}`\n\n" .
+            "Penting: Login dengan password diatas dan segera ubah.\n\n" .
+            "\n\nLink website: " . env('APP_URL') . "/login \n\n" .
+            "*Jika Anda membutuhkan bantuan, hubungi kami.*";
 
         $this->sendMessage($phone, $message);
         return $message;

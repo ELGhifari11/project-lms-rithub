@@ -15,7 +15,9 @@ class CommissionEarning extends Model
         'mentor_id',
         'order_id',
         'amount',
-        'status'
+        'mentor_commission',
+        'status',
+        'platform_fees',
     ];
     // add guaded
     protected $guarded = ['id'];

@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use random;
 use Filament\Actions;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use App\Filament\Resources\UserResource;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use App\Http\Controllers\WhatsAppController;
+use Filament\Notifications\Notification;
 
 class CreateUser extends CreateRecord
 {
@@ -15,7 +17,7 @@ class CreateUser extends CreateRecord
     protected static bool $canCreateAnother = false;
 
     //customize redirect after create
-      public function getRedirectUrl(): string
+    public function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
@@ -23,9 +25,7 @@ class CreateUser extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 
-        // logger($data);
-
-        $password = Str::random(6);
+        $password = Str::random(8) . Str::random(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') . Str::random(2, '!@#$%^&*()') . Str::random(2, '0123456789');
 
         $data['role'] = 'mentor';
 
@@ -42,8 +42,6 @@ class CreateUser extends CreateRecord
 
         $whatsAppController = new WhatsAppController();
         $whatsAppController->messagePasswordRegister($data['phone'], $password, $data['name'], now()->toDateString() . ' ' . now()->format('l'));
-
-        // logger($data);
 
         return $data;
     }

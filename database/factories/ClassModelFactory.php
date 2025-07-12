@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\ClassModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\SubCategory;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ClassModel>
@@ -25,7 +26,7 @@ class ClassModelFactory extends Factory
         return [
             'title' => ucfirst($this->faker->unique()->sentence(3)),
             'description' => $this->faker->paragraph,
-            'thumbnail_path' => $this->faker->imageUrl(640, 480, 'cats', true),
+            'thumbnail_path' => asset('images/light.png'),
             'mentor_id' => User::where('role', 'mentor')->inRandomOrder()->first()?->id ?? User::factory()->state(['role' => 'mentor']),
             'sub_category_id' => SubCategory::inRandomOrder()->first()?->id ?? SubCategory::factory(),
             'duration_minutes' => $this->faker->numberBetween(30, 180),

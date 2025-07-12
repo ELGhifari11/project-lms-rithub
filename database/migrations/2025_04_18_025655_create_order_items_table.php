@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('item_id')->nullable();
             $table->decimal('price', 10, 2);
             $table->string('interval')->nullable();
-            $table->decimal('amount', 9, 2)->default(1);
-            $table->decimal('admin_fee', 9 ,2)->default(0);
+            $table->smallInteger('amount')->default(1);
+            $table->bigInteger('admin_fee')->default(0);
             $table->timestamp('created_at')->nullable();
 
             $table->index(['order_id', 'item_type', 'item_id']);

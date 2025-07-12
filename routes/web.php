@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Auth\EmailVerificationController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Route::get('/v1/verified-email', [RegisterController::class, 'verifiedEmail']);

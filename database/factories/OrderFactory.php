@@ -24,8 +24,8 @@ class OrderFactory extends Factory
      public function definition(): array
     {
         $promo = Promo::inRandomOrder()->first(); // bisa null
-        $totalAmount = $this->faker->numberBetween(100000, 500000);
-        $discount = $promo ? $this->faker->numberBetween(10000, 50000) : 0;
+        $totalAmount = $this->faker->randomFloat(2, 100000, 500000);
+        $discount = $promo ? $this->faker->randomFloat(2, 10000, 50000) : 0;
         $finalAmount = $totalAmount - $discount;
 
         return [

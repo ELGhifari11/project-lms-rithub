@@ -5,11 +5,9 @@ namespace App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Actions;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 
 class EditRole extends EditRecord
 {
@@ -43,10 +41,7 @@ class EditRole extends EditRecord
 
     protected function afterSave(): void
     {
-        $recipient = $this->record->team_id ? $this->record->team : $this->record;
-
         $permissionModels = collect();
-
         $this->permissions->each(function ($permission) use ($permissionModels) {
             $permissionModels->push(Utils::getPermissionModel()::firstOrCreate([
                 'name' => $permission,
@@ -55,15 +50,5 @@ class EditRole extends EditRecord
         });
 
         $this->record->syncPermissions($permissionModels);
-
-
-        Notification::make()
-            ->title('Role updated')
-            ->success()
-            ->icon('heroicon-s-shield-check')
-            ->iconColor('success')
-            ->sendToDatabase(Auth::user());
     }
-
-
 }

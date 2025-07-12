@@ -25,7 +25,7 @@ use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, LogsActivity, HasPanelShield ;
+    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, LogsActivity, HasPanelShield;
 
     // public function sendEmailVerificationNotification()
     // {
@@ -37,7 +37,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
      *
      * @var array<int, string>
      */
-   protected $fillable = [
+    protected $fillable = [
         'name',
         'email',
         'password',
@@ -85,7 +85,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'updated_at' => 'datetime',
             'social_media' => 'array',
         ];
-    } //TODO manipulasi respon buat url biar pake full urlnya lgsg di responnya
+    }
+
+    //TODO manipulasi respon buat url biar pake full urlnya lgsg di responnya
 
     // === Relationships ===
     // User yang saya follow
@@ -103,7 +105,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     // User Class content
     public function userCompletedContents()
     {
-        return $this->hasMany(UserClassContent::class);
+        return $this->hasMany(UserClassContents::class);
     }
 
     public function bookmarks()
@@ -216,6 +218,32 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     // =============
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnly([
+                'name',
+                'email',
+                'password',
+                'avatar_url',
+                'username',
+                'phone',
+                'bio',
+                'role',
+                'profession',
+                'is_verified',
+                'point',
+                'last_login_at',
+                'email_verified_at',
+                'preference',
+                'mentor_subscription_price',
+                'social_media'
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         $avatar = $this->getAttributes()['avatar_url'] ?? null;
@@ -233,16 +261,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // return ($this->hasAnyRole(['super_admin', 'mentor']) || in_array($this->role, ['admin', 'mentor']));
+        return ($this->hasAnyRole(['super_admin', 'mentor']) || in_array($this->role, ['admin', 'mentor']));
         return true;
-    }
-
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['name', 'email'])
-            ->logOnlyDirty()
-            ->useLogName('User');
     }
 }

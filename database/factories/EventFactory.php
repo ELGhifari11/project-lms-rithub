@@ -33,7 +33,7 @@ class EventFactory extends Factory
             'start_time' => $start,
             'end_time' => $end,
             'max_participants' => $this->faker->numberBetween(10, 100),
-            'price' => $this->faker->numberBetween(0, 500000), // bisa Rp0 - Rp500.000
+            'price' => $this->faker->randomFloat(2, 0, 500000), // bisa Rp0 - Rp500.000
             'status' => $status,
             'thumbnail_path' => $this->faker->imageUrl(640, 480, 'event', true),
             'is_done' => in_array($status, ['completed', 'canceled']),

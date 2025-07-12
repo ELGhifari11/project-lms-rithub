@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('withdrawals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mentor_id');
+            $table->string('external_id')->nullable();
             $table->unsignedBigInteger('wallet_id');
-            $table->decimal('amount', 9, 2);
+            $table->bigInteger('amount');
             $table->string('status')->default('PENDING');
             $table->string('failure_code')->nullable();
             $table->text('note')->nullable();

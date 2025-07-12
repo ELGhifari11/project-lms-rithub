@@ -1,61 +1,162 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Rumah IT Hub - Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php)
+![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&logo=laravel)
+![Filament](https://img.shields.io/badge/Filament-3.x-F59E0B?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?style=for-the-badge&logo=github-actions)
 
-## About Laravel
+Backend service untuk platform e-learning Rumah IT Hub, dibangun menggunakan Laravel 11 dengan admin panel Filament. Proyek ini menyediakan REST API untuk aplikasi client dan dilengkapi dengan setup Docker untuk kemudahan development serta alur kerja CI/CD untuk deployment otomatis.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Daftar Isi
+1. [Fitur Utama](#fitur-utama)
+2. [Teknologi yang Digunakan](#teknologi-yang-digunakan)
+3. [Struktur Proyek](#struktur-proyek)
+4. [Instalasi & Setup (Development)](#-instalasi--setup-development)
+5. [Database (ERD)](#database-erd)
+6. [Dokumentasi API](#dokumentasi-api)
+7. [Standar Kualitas Kode](#-standar-kualitas-kode)
+8. [Deployment (CI/CD)](#-deployment-cicd)
+9. [Perintah Penting Lainnya](#perintah-penting-lainnya)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Manajemen Kursus:** Pengelolaan kelas, modul, dan konten edukasi.
+-   **Sistem Pengguna & Mentor:** Otentikasi, profil pengguna, dan manajemen mentor.
+-   **Transaksi & Pembayaran:** Proses checkout, pembayaran, dan manajemen order terintegrasi dengan payment gateway.
+-   **API Dokumentasi Otomatis:** Dokumentasi API interaktif yang di-generate secara otomatis menggunakan Scramble.
+-   **Admin Panel Lengkap:** Panel admin yang powerful dibangun dengan Filament.
+-   **Development Ready:** Dilengkapi dengan konfigurasi Docker untuk setup lingkungan development yang cepat dan konsisten.
+-   **Deployment Otomatis:** Alur kerja CI/CD dengan GitHub Actions untuk deployment ke CPanel dan VPS.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Teknologi yang Digunakan
 
-## Laravel Sponsors
+-   **Backend:** PHP 8.2, Laravel 11
+-   **Admin Panel:** Filament 3.x
+-   **Database:** MySQL 8.0
+-   **Web Server:** Nginx
+-   **Containerization:** Docker & Docker Compose
+-   **Frontend Assets:** Vite
+-   **API Documentation:** Scramble
+-   **CI/CD:** GitHub Actions
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Struktur Proyek
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+Berikut adalah gambaran umum struktur direktori penting dalam proyek ini.
 
-## Contributing
+```
+.
+├── app/
+│   ├── Filament/      # Semua Resources, Pages, dan Widget untuk Admin Panel Filament
+│   ├── Http/
+│   │   ├── Controllers/ # Controller untuk menangani request HTTP (termasuk API)
+│   │   └── Resources/   # Transformasi data model (API Resources)
+│   ├── Models/        # Model Eloquent yang merepresentasikan tabel database
+│   ├── Jobs/          # Class Job yang berjalan di background (queue)
+│   └── Providers/     # Service provider Laravel
+├── config/            # File-file konfigurasi aplikasi
+├── database/
+│   ├── migrations/    # Skema database
+│   └── seeders/       # Data awal untuk database
+├── routes/
+│   ├── api.php        # Rute untuk REST API
+│   └── web.php        # Rute untuk web (termasuk admin panel)
+├── .github/
+│   └── workflows/     # Alur kerja CI/CD (GitHub Actions)
+└── README.md          # Anda sedang membacanya :)
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🚀 Instalasi & Setup (Development)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Berikut adalah panduan untuk menjalankan proyek ini di lingkungan development menggunakan Docker.
 
-## Security Vulnerabilities
+### 1. Prasyarat
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+-   [Docker](https://www.docker.com/products/docker-desktop/)
+-   [Composer](https://getcomposer.org/)
+-   [Node.js & NPM](https://nodejs.org/en/)
 
-## License
+### 2. Clone Repository
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+git clone https://github.com/your-username/rumah-it-hub-backend.git
+cd rumah-it-hub-backend
+```
+
+### 3. Konfigurasi Environment
+
+Proyek ini membutuhkan file `.env` untuk menyimpan konfigurasi dan kredensial.
+
+```bash
+# Salin dari contoh yang sudah disediakan
+cp .env.example .env
+```
+
+Buka file `.env` dan sesuaikan variabel yang diperlukan. Untuk setup Docker bawaan, konfigurasi database sudah sesuai.
+
+### 4. Instalasi Dependensi
+
+Install semua dependensi PHP (Laravel) dan JavaScript.
+
+```bash
+# Install dependensi PHP
+composer install
+
+# Install dependensi Node.js
+npm install
+```
+
+### 5. Jalankan Aplikasi dengan Docker
+
+Gunakan Docker Compose untuk membangun image dan menjalankan semua service (aplikasi, database, web server).
+
+```bash
+# Build dan jalankan container di background
+docker-compose up -d --build
+```
+
+### 6. Finalisasi Setup Laravel
+
+Setelah container berjalan, jalankan perintah-perintah berikut untuk menyelesaikan instalasi Laravel.
+
+```bash
+# Generate application key
+docker-compose exec app php artisan key:generate
+
+# Jalankan migrasi database dan seeder
+docker-compose exec app php artisan migrate --seed
+
+# Buat symbolic link untuk storage
+docker-compose exec app php artisan storage:link
+
+# Build aset frontend
+npm run dev
+```
+
+### 7. Akses Aplikasi
+
+Setelah semua langkah selesai, aplikasi Anda akan dapat diakses di:
+
+-   **Website:** [http://localhost:8000](http://localhost:8000)
+-   **Admin Panel:** [http://localhost:8000/admin](http://localhost:8000/admin)
+-   **Dokumentasi API:** [http://localhost:8000/docs/api](http://localhost:8000/docs/api)
+
+---
+
+## Dokumentasi API
+
+Dokumentasi API untuk proyek ini di-generate secara otomatis menggunakan **Scramble**. Anda bisa mengaksesnya melalui browser untuk melihat semua endpoint yang tersedia, parameter yang dibutuhkan, dan contoh respons.
+
+-   **URL Dokumentasi API:** [http://localhost:8000/docs/api](http://localhost:8000/docs/api)
+
+---

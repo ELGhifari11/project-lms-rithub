@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Withdrawal extends Model
 {
     /** @use HasFactory<\Database\Factories\WithdrawalFactory> */
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // add fillable
     protected $fillable = [
@@ -40,19 +40,19 @@ class Withdrawal extends Model
         return $this->belongsTo(Wallet::class, 'wallet_id');
     }
 
-    // public function getActivitylogOptions(): LogOptions
-    // {
-    //     return LogOptions::defaults()
-    //         ->logFillable()
-    //         ->logOnly([
-    //             'mentor_id',
-    //             'amount',
-    //             'status',
-    //             'note',
-    //             'requested_at',
-    //             'processed_at'
-    //         ])
-    //         ->logOnlyDirty()
-    //         ->dontSubmitEmptyLogs();
-    // }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnly([
+                'mentor_id',
+                'amount',
+                'status',
+                'note',
+                'requested_at',
+                'processed_at'
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 }

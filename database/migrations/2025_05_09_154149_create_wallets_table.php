@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mentor_id');
-            $table->string('bank_name');
-            $table->string('account_holder_name');
-            $table->string('bank_account_number');
-            $table->decimal('balance', 10, 2)->default(0);
+            $table->string('bank_name')->nullable();
+            $table->string('account_holder_name')->nullable();
+            $table->string('bank_account_number')->nullable();
+            $table->bigInteger('balance')->default(0);
             $table->timestamps();
         });
     }
