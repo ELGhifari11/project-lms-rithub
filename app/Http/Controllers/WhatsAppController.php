@@ -11,7 +11,7 @@ class WhatsAppController extends Controller
         $phone = preg_replace('/\D/', '', $phone);
 
         $url = 'https://api.fonnte.com/send';
-        $token = '';
+        $token = 'DrYMr6sBfgLLmFGU2RHE';
         $data = [
             'target' => $phone,
             'message' => $message,
@@ -33,13 +33,17 @@ class WhatsAppController extends Controller
 
     public function messagePasswordRegister($phone, $password, $name, $currentDate)
     {
-        $message = "*📋 REGISTRASI AKUN BERHASIL* :\n\n" .
-            "Date: {$currentDate}\n\n" .
-            "Nama: *{$name}*\n\n" .
-            "Password: `{$password}`\n\n" .
-            "Penting: Login dengan password diatas dan segera ubah.\n\n" .
-            "\n\nLink website: " . env('APP_URL') . "/login \n\n" .
-            "*Jika Anda membutuhkan bantuan, hubungi kami.*";
+        $message = "Account registration was successful!\n\n" .
+            "This is your new password.\n\n" .
+            "========== Credentials ==========\n\n" .
+            "*Date*: {$currentDate}\n\n" .
+            "*Name*: {$name}\n" .
+            "*Phone*: {$phone}\n" .
+            "*Password*: {$password}\n" .
+            "==============================\n" .
+            "Please change the password after login to secure your account.\n" .
+            "Login here: https://rithub.id/login\n\n" .
+            "Thank you!";
 
         $this->sendMessage($phone, $message);
         return $message;
