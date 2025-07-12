@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class RegisterController extends Controller
@@ -55,32 +56,39 @@ class RegisterController extends Controller
 
     public function verify(Request $request, $userId): JsonResponse
     {
-        if (!$request->hasValidSignature()) {
+        try {
+            if (!$request->hasValidSignature()) {
+                return response()->json([
+                    'message' => 'Invalid signature or expired verification code.'
+                ], 400);
+            }
+
+            $user = User::findOrFail($userId);
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not found'
+                ], 400);
+            }
+
+            if (!$user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+
+                return response()->json([
+                    'message' => 'Email address successfully verified',
+                    'user' => $user
+                ], 200);
+            }
+
             return response()->json([
-                'message' => 'Invalid signature or expired verification code.'
+                'message' => 'Email address already verified'
             ], 400);
-        }
-
-        $user = User::findOrFail($userId);
-
-        if (!$user) {
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'User not found'
-            ], 400);
+                'message' => 'Terjadi kesalahan saat verifikasi email.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        if (!$user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified();
-
-            return response()->json([
-                'message' => 'Email address successfully verified',
-                'user' => $user
-            ], 200);
-        }
-
-        return response()->json([
-            'message' => 'Email address already verified'
-        ], 400);
     }
 
     public function resendEmailVerification(Request $request)
@@ -98,17 +106,22 @@ class RegisterController extends Controller
             $expires = $request->query('expires');
             $signature = $request->query('signature');
 
-            $response = Http::asForm()->post(config('app.url') . "/api/api/v1/email/verify/{$id}/{$hash}?expires={$expires}&signature={$signature}");
+            // pakai yg ini ketika sudah deploy di vercel
+            // $response = Http::asForm()->post(config('app.url') . "/api/api/v1/email/verify/{$id}/{$hash}?expires={$expires}&signature={$signature}");
+            $response = Http::asForm()->post(config('app.url') . "/api/v1/email/verify/{$id}/{$hash}?expires={$expires}&signature={$signature}");
 
             if ($response->successful()) {
+                Log::info([$response->json()]);
                 return view('verification.success');
             } else {
+                Log::error('email verification failed', [$response->json()]);
                 return view('verification.failed', [
                     'message' => 'Gagal verifikasi email. Silahkan coba lagi'
                 ]);
             }
         } catch (\Exception $e) {
-            return view('verifyFailed', [
+            Log::error("email verification failed", [$e->getMessage()]);
+            return view('verification.failed', [
                 'message' => 'terjadi kesalahan, silahkan coba lagi nanti.'
             ]);
         }
