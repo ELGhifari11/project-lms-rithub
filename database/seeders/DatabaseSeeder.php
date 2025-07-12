@@ -49,41 +49,57 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        echo "Seeding data...";
+        // echo "Seeding data...";
+        // echo "\n";
+        // echo "Clearing data...";
+        // echo "\n";
+        // User::factory(10)->create();
+        // echo "\n";
+        // echo "Data user seeded successfully.";
+        // Category::factory(3)->create();
+        // echo "\n";
+        // echo "Data category seeded successfully.";
+        // $this->call([
+        //     SubCategorySeeder::class,
+        // ]);
+        // echo "\n";
+        // echo "Data subcategory seeded successfully.";
+
+        ClassModel::factory(100)->create();
+        echo "Class created";
         echo "\n";
-        echo "Clearing data...";
+        ModuleOfCourse::factory(200)->create();
+        echo "ModuleOfCourse created";
         echo "\n";
-        User::factory(10)->create();
+        // Enrollment::factory(200)->create();
+        // echo "Enrollment created";
+        // echo "\n";
+        EducationalContent::factory(200)->create();
+        echo "EducationalContent created";
         echo "\n";
-        echo "Data user seeded successfully.";
-        Category::factory(3)->create();
+        Milestone::factory(200)->create();
+        echo "Milestone created";
         echo "\n";
-        echo "Data category seeded successfully.";
-        $this->call([
-            SubCategorySeeder::class,
-        ]);
-        echo "\n";
-        echo "Data subcategory seeded successfully.";
 
 
-        if (!User::where('email', 'admin@test.com')->exists()) {
-            User::factory()->create([
-                'name' => 'testing',
-                'email' => 'admin@test.com',
-                // 'role' => 'admin',
-                'password' => Hash::make('1'),
-                'email_verified_at' => Carbon::now()
-            ]);
-        }
+        // if (!User::where('email', 'admin@test.com')->exists()) {
+        //     User::factory()->create([
+        //         'name' => 'testing',
+        //         'email' => 'admin@test.com',
+        //         // 'role' => 'admin',
+        //         'password' => Hash::make('1'),
+        //         'email_verified_at' => Carbon::now()
+        //     ]);
+        // }
 
-        if (!User::where('email', 'mentor@test.com')->exists()) {
-            User::factory()->create([
-                'name' => 'testing2',
-                'email' => 'mentor@test.com',
-                // 'role' => 'mentor',
-                'password' => Hash::make('1'),
-                'email_verified_at' => Carbon::now()
-            ]);
-        }
+        // if (!User::where('email', 'mentor@test.com')->exists()) {
+        //     User::factory()->create([
+        //         'name' => 'testing2',
+        //         'email' => 'mentor@test.com',
+        //         // 'role' => 'mentor',
+        //         'password' => Hash::make('1'),
+        //         'email_verified_at' => Carbon::now()
+        //     ]);
+        // }
     }
 }
