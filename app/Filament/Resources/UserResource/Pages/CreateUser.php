@@ -23,7 +23,9 @@ class CreateUser extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 
-        $password = Str::random(8) . Str::random(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') . Str::random(2, '!@#$%^&*()') . Str::random(2, '0123456789');
+        // logger($data);
+
+        $password = Str::random(6);
 
         $data['role'] = 'mentor';
 
@@ -40,6 +42,8 @@ class CreateUser extends CreateRecord
 
         $whatsAppController = new WhatsAppController();
         $whatsAppController->messagePasswordRegister($data['phone'], $password, $data['name'], now()->toDateString() . ' ' . now()->format('l'));
+
+        // logger($data);
 
         return $data;
     }
